@@ -18,4 +18,16 @@
     </item>
   </style>
 
+  <style name="textColors">
+
+    <item name="android:textSize">
+      12sp
+    </item>
+
+    <item name="android:textColor">
+      #C4C4C4
+    </item>
+
+  </style>
+
 </resources>
