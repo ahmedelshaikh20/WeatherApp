@@ -2,4 +2,14 @@
     <string name="app_name">WeatherApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="search_location">Search Location</string>
+  <string name="currentlocation_text">Hyderabad</string>
+  <string name="timeLabel">Time</string>
+  <string name="rainLabel">% Rain</string>
+  <string name="uvLabel">UV</string>
+  <string name="aqLabel">AQ</string>
+  <string name="time">11:25 am</string>
+  <string name="uv">4</string>
+  <string name="rainPercentage">58%</string>
+  <string name="aq">4</string>
 </resources>

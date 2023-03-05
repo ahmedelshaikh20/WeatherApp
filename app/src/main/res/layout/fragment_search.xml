@@ -17,19 +17,20 @@
     android:iconifiedByDefault="false"
     android:layoutDirection="rtl"
     android:queryBackground="@android:color/transparent"
-    android:queryHint="Search Location"
+    android:queryHint="@string/search_location"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
+
   <TextView
-    android:id="@+id/textView"
+    android:id="@+id/currentLocation"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:fontFamily="@font/poppins_bold"
     android:gravity="center_horizontal"
     android:lineHeight="45sp"
-    android:text="Hyderabad"
+    tools:text="@string/currentlocation_text"
     android:textAlignment="center"
     android:textAppearance="@style/hyderabad"
     android:textColor="@color/black"
@@ -39,20 +40,35 @@
     app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
   <TextView
-    android:id="@+id/temp_text"
+    android:id="@+id/dot"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="24dp"
+    android:fontFamily="@font/poppins_bold"
+    android:gravity="center_horizontal"
+    android:textSize="15sp"
+    android:lineHeight="105sp"
+    android:text="&#xb0;"
+    android:textAlignment="center"
+    android:textColor="@color/black"
+    app:layout_constraintStart_toEndOf="@+id/temperature"
+    app:layout_constraintTop_toBottomOf="@+id/currentLocation" />
+
+  <TextView
+    android:id="@+id/temperature"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="24dp"
+    android:fontFamily="@font/poppins_bold"
     android:gravity="center_horizontal"
     android:lineHeight="105sp"
-    android:text="31&#xb0;"
-    android:fontFamily="@font/poppins_bold"
+    android:text="31"
     android:textAlignment="center"
     android:textAppearance="@style/Celisus_text"
     android:textColor="@color/black"
     app:layout_constraintEnd_toEndOf="@+id/imageView"
-    app:layout_constraintStart_toStartOf="@+id/textView"
-    app:layout_constraintTop_toBottomOf="@+id/textView" />
+    app:layout_constraintStart_toStartOf="@+id/currentLocation"
+    app:layout_constraintTop_toBottomOf="@+id/currentLocation" />
 
   <ImageView
     android:id="@+id/imageView"
@@ -64,46 +80,139 @@
     android:layout_alignParentRight="true"
     android:layout_alignParentBottom="true"
     android:src="@drawable/ic_location_icon"
-    app:layout_constraintBottom_toBottomOf="@+id/textView"
-    app:layout_constraintStart_toEndOf="@+id/textView"
-    app:layout_constraintTop_toTopOf="@+id/textView" />
+    app:layout_constraintBottom_toBottomOf="@+id/currentLocation"
+    app:layout_constraintStart_toEndOf="@+id/currentLocation"
+    app:layout_constraintTop_toTopOf="@+id/currentLocation" />
 
-  <RelativeLayout
+  <com.google.android.material.card.MaterialCardView
     android:layout_width="0dp"
+    app:shapeAppearanceOverlay="@style/MyCardView"
+    android:backgroundTint="@color/TinyWhite"
     android:layout_height="wrap_content"
-    android:layout_margin="24dp"
-    android:padding="23dp"
-    android:background="@drawable/rounded_border"
     app:layout_constraintEnd_toEndOf="@+id/searchView"
     app:layout_constraintStart_toStartOf="@+id/searchView"
-    app:layout_constraintTop_toBottomOf="@+id/temp_text" >
+    app:layout_constraintTop_toBottomOf="@+id/temperature" >
 
-    <View android:id="@+id/dummy"
-      android:layout_height="0dp"
-      android:layout_width="0dp"
-      android:layout_centerInParent="true"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignRight="@id/dummy"
-      android:layout_alignParentStart="true"
-      android:layout_alignParentLeft="true"
-      android:layout_marginStart="23dp"
-      android:text="Time" />
+      <TextView
+        android:id="@+id/timeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:padding="10dp"
+        android:text="@string/timeLabel"
+        android:textAppearance="@style/textColors"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
-    <TextView
-      android:id="@+id/UV"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignLeft="@id/dummy"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:layout_marginEnd="22dp"
-      android:text="UV" />
+      <TextView
+        android:id="@+id/uvLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/uvLabel"
+        app:layout_constraintBottom_toBottomOf="@id/timeLabel"
+        android:textAppearance="@style/textColors"
+
+        app:layout_constraintEnd_toStartOf="@+id/rainLabel"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/timeLabel"
+        app:layout_constraintTop_toTopOf="@id/timeLabel"></TextView>
+
+      <TextView
+        android:id="@+id/rainLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/rainLabel"
+        android:textAppearance="@style/textColors"
+
+        app:layout_constraintBottom_toBottomOf="@+id/uvLabel"
+        app:layout_constraintEnd_toStartOf="@id/AQLabel"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/uvLabel"
+        app:layout_constraintTop_toTopOf="@+id/uvLabel"></TextView>
+
+      <TextView
+        android:id="@+id/AQLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:padding="10dp"
+        android:text="@string/aqLabel"
+        android:textAppearance="@style/textColors"
+        app:layout_constraintBottom_toBottomOf="@+id/rainLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintTop_toTopOf="@+id/rainLabel"></TextView>
 
 
-  </RelativeLayout>
+      <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/time"
+        android:textAlignment="center"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/editableTexts"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/timeLabel"
+        app:layout_constraintStart_toStartOf="@+id/timeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/timeLabel"></TextView>
+
+      <TextView
+        android:id="@+id/uv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="@string/uv"
+        android:textAlignment="center"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/editableTexts"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/uvLabel"
+        app:layout_constraintStart_toStartOf="@+id/uvLabel"
+        app:layout_constraintTop_toBottomOf="@+id/uvLabel" />
+      <TextView
+        android:id="@+id/rain"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="@string/rainPercentage"
+        android:textAlignment="center"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/editableTexts"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/rainLabel"
+        app:layout_constraintStart_toStartOf="@+id/rainLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rainLabel"></TextView>
+      <TextView
+        android:id="@+id/AQ"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="@string/aq"
+        android:textAlignment="center"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/editableTexts"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/AQLabel"
+        app:layout_constraintStart_toStartOf="@+id/AQLabel"
+        app:layout_constraintTop_toBottomOf="@+id/AQLabel"></TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </com.google.android.material.card.MaterialCardView>
 
 
 
