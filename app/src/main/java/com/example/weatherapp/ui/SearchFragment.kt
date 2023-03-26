@@ -25,14 +25,13 @@ class SearchFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View? {
 
-     binding = FragmentSearchBinding.inflate(inflater)
-    val view = inflater.inflate(R.layout.fragment_search,container,false)
+    binding = FragmentSearchBinding.inflate(inflater)
     viewModel = ViewModelProvider(this).get(searchviewmodel::class.java)
-    /////////
-viewModel.currentLocation.observe(viewLifecycleOwner , Observer {
-binding.time.text= it.toString()
-})
-    return view
+    viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
+      Log.d("LOOOL", it)
+      binding.currentLocation.text = it
+    })
+    return binding.root
   }
 
 
