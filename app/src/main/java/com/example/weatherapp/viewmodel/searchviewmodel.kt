@@ -7,12 +7,18 @@ import androidx.lifecycle.ViewModel
 class searchviewmodel : ViewModel() {
 
   var _currentLocation = MutableLiveData<String>()
-  val currentLocation :LiveData<String>
-  get() = _currentLocation
+  val currentLocation: LiveData<String>
+    get() = _currentLocation
+
+
 
 
   init {
+    getCurrentLocation()
+    _currentLocation.value = "Cairo"
+  }
 
-      _currentLocation.value = "Cairo"
+  private fun getCurrentLocation() {
+
   }
 }
