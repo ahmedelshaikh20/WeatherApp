@@ -59,7 +59,7 @@ class SearchFragment : Fragment() {
       if (it.toString().contains("Rain"))
         viewModel._currentrain.value = it.rain.`1h`.toString()
       else
-        viewModel._currentrain.value = "0 %"
+        viewModel._currentrain.value = "0"
     })
     viewModel.currentweather.observe(viewLifecycleOwner, Observer {
       binding.temperature.text = it
