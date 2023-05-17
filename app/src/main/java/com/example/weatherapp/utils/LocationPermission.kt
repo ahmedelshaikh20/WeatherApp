@@ -13,8 +13,7 @@ private const val MY_PERMISSIONS_REQUEST_LOCATION = 99
 fun checkLocationPermission(activity: Activity) {
   if (ActivityCompat.checkSelfPermission(
       activity,
-      Manifest.permission.ACCESS_FINE_LOCATION
-    ) != PackageManager.PERMISSION_GRANTED
+      Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
   ) {
     // Should we show an explanation?
     if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -51,9 +50,8 @@ private fun requestLocationPermission(activity: Activity) {
 }
 
 fun checkFineLocation(activity: Activity): Boolean {
-  return ActivityCompat.shouldShowRequestPermissionRationale(
-    activity,
-    Manifest.permission.ACCESS_FINE_LOCATION
-  )
-
+  return ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)
 }
+
+
+

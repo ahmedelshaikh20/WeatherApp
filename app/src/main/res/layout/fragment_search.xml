@@ -124,45 +124,45 @@
         app:layout_constraintTop_toTopOf="parent"></TextView>
 
       <TextView
-        android:id="@+id/uvLabel"
+        android:id="@+id/descriptionlabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:text="@string/uvLabel"
+        android:text="Description"
         android:textAppearance="@style/textColors"
         app:layout_constraintBottom_toBottomOf="@id/timeLabel"
 
-        app:layout_constraintEnd_toStartOf="@+id/rainLabel"
+        app:layout_constraintEnd_toStartOf="@+id/pressureLabel"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/timeLabel"
-        app:layout_constraintTop_toTopOf="@id/timeLabel"></TextView>
+        app:layout_constraintTop_toTopOf="@id/timeLabel" />
 
       <TextView
-        android:id="@+id/rainLabel"
+        android:id="@+id/pressureLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:text="@string/rainLabel"
+        android:text="@string/pressureLabel"
         android:textAppearance="@style/textColors"
 
-        app:layout_constraintBottom_toBottomOf="@+id/uvLabel"
-        app:layout_constraintEnd_toStartOf="@id/AQLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/descriptionlabel"
+        app:layout_constraintEnd_toStartOf="@id/humidityLabel"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/uvLabel"
-        app:layout_constraintTop_toTopOf="@+id/uvLabel"></TextView>
+        app:layout_constraintStart_toEndOf="@+id/descriptionlabel"
+        app:layout_constraintTop_toTopOf="@+id/descriptionlabel"></TextView>
 
       <TextView
-        android:id="@+id/AQLabel"
+        android:id="@+id/humidityLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:padding="10dp"
-        android:text="@string/aqLabel"
+        android:text="@string/humidityLabel"
         android:textAppearance="@style/textColors"
-        app:layout_constraintBottom_toBottomOf="@+id/rainLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/pressureLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="@+id/rainLabel"></TextView>
+        app:layout_constraintTop_toTopOf="@+id/pressureLabel"></TextView>
 
 
       <TextView
@@ -181,7 +181,7 @@
         tools:text="@string/time"></TextView>
 
       <TextView
-        android:id="@+id/uv"
+        android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
@@ -190,13 +190,15 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/uvLabel"
-        app:layout_constraintStart_toStartOf="@+id/uvLabel"
-        app:layout_constraintTop_toBottomOf="@+id/uvLabel"
-        tools:text="@string/uv" />
+        app:layout_constraintEnd_toEndOf="@id/descriptionlabel"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/descriptionlabel"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionlabel"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="@string/description" />
 
       <TextView
-        android:id="@+id/rain"
+        android:id="@+id/pressure"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
@@ -205,13 +207,13 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/rainLabel"
-        app:layout_constraintStart_toStartOf="@+id/rainLabel"
-        app:layout_constraintTop_toBottomOf="@+id/rainLabel"
-        tools:text="@string/rainPercentage"></TextView>
+        app:layout_constraintEnd_toEndOf="@id/pressureLabel"
+        app:layout_constraintStart_toStartOf="@+id/pressureLabel"
+        app:layout_constraintTop_toBottomOf="@+id/pressureLabel"
+        tools:text="@string/pressure"></TextView>
 
       <TextView
-        android:id="@+id/AQ"
+        android:id="@+id/humidity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
@@ -220,10 +222,10 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/AQLabel"
-        app:layout_constraintStart_toStartOf="@+id/AQLabel"
-        app:layout_constraintTop_toBottomOf="@+id/AQLabel"
-        tools:text="@string/aq"></TextView>
+        app:layout_constraintEnd_toEndOf="@id/humidityLabel"
+        app:layout_constraintStart_toStartOf="@+id/humidityLabel"
+        app:layout_constraintTop_toBottomOf="@+id/humidityLabel"
+        tools:text="@string/humidity"></TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
