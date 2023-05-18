@@ -1,5 +1,8 @@
 package com.example.weatherapp.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Rain(
-    var `1h`: Double =0.0
+  @SerializedName("1h")
+    var rainPercentage: Double =0.0
 )

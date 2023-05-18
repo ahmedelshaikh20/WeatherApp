@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class searchviewmodel(val weatherRepository: WeatherRepositry, activity: Activity) : ViewModel() {
+class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocationClient: FusedLocationProviderClient) : ViewModel() {
+
 
   private var _weatherResponse = MutableLiveData<WeatherApiResponse>()
   val weatherResponse: LiveData<WeatherApiResponse>
@@ -46,28 +47,27 @@ class searchviewmodel(val weatherRepository: WeatherRepositry, activity: Activit
   val isPermissionGranted: LiveData<Boolean>
     get() = _isPermissionGranted
 
+  private var _foucsOnSearch = MutableLiveData<Boolean>()
+  val foucsOnSearch: LiveData<Boolean>
+    get() = _foucsOnSearch
 
   init {
     _currentLocation.value = "Cairo"
-    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
-    viewModelScope.launch {
-      getLaslLocation(fusedLocationClient , activity)
-    }
+  }
 
-
+   suspend fun OnLocationGranted() {
+     viewModelScope.launch {
+    val latLng = getLastKnownLocation(fusedLocationClient)
+     latLng?.let { getWeatherData(it) }}
 
   }
 
-   suspend fun getLaslLocation(fusedLocationClient: FusedLocationProviderClient, activity: Activity) {
-    val latLng = getLastKnownLocation(fusedLocationClient , activity  )
-     latLng?.let { getWeatherData(it) }
-
-
+  fun OnLocationDismissed(){
+    _foucsOnSearch.value = true
   }
 
   fun LocationIsGranted(){
     _isPermissionGranted.value= true
-
   }
 
 
@@ -79,7 +79,7 @@ class searchviewmodel(val weatherRepository: WeatherRepositry, activity: Activit
 
   private fun updateData() {
     _currentLocation.value= weatherResponse.value?.name
-    _currentweather.value= weatherResponse.value?.main?.temp.toString()
+    _currentweather.value= weatherResponse.value?.main?.temperature.toString()
     _currentHumidity.value=weatherResponse.value?.main?.humidity.toString()
     _currentDescription.value= weatherResponse.value?.weather?.get(0)?.description
     _currentPressure.value = weatherResponse.value?.main?.pressure.toString()
@@ -106,9 +106,8 @@ class searchviewmodel(val weatherRepository: WeatherRepositry, activity: Activit
 @Suppress("UNCHECKED_CAST")
 class SearchViewModelFactory (
   private val weatherRepositry: WeatherRepositry,
-  private val activity: Activity
-) : ViewModelProvider.NewInstanceFactory() {
+  private val fusedLocationClient: FusedLocationProviderClient) : ViewModelProvider.NewInstanceFactory() {
   override fun <T : ViewModel> create(modelClass: Class<T>) =
-    (searchviewmodel(weatherRepositry , activity) as T)
+    (searchviewmodel(weatherRepositry , fusedLocationClient) as T)
 }
 

@@ -9,6 +9,5 @@ interface WeatherApi {
 
   @GET("weather")
   suspend fun getCurrentWeather(@Query("lat") lat : Double , @Query("lon") lon : Double , @Query("appid") appid : String , @Query("units") units : String ) : Response<WeatherApiResponse>
-  @GET("weather")
-  suspend fun getAirPollution(@Query("lat") lat : Double , @Query("lon") lon : Double , @Query("appid") appid : String , @Query("units") units : String ) : Response<WeatherApiResponse>
+
 }

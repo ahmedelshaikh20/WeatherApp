@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui
 
-import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.databinding.FragmentSearchBinding
+import com.example.weatherapp.utils.checkFineLocation
+import com.example.weatherapp.utils.checkLocationPermission
 import com.example.weatherapp.viewmodel.SearchViewModelFactory
 import com.example.weatherapp.viewmodel.searchviewmodel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,7 +36,7 @@ class SearchFragment : Fragment() {
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     binding = FragmentSearchBinding.inflate(inflater)
     weatherRepositry = WeatherRepositry()
-    val viewModelFactory = SearchViewModelFactory(weatherRepositry , requireActivity())
+    val viewModelFactory = SearchViewModelFactory(weatherRepositry , fusedLocationClient)
      viewModel = ViewModelProvider(this, viewModelFactory).get(searchviewmodel::class.java)
     viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
       binding.currentLocation.text = it
@@ -56,25 +57,36 @@ class SearchFragment : Fragment() {
     viewModel.currentDescription.observe(viewLifecycleOwner, Observer {
       binding.description.text = it
     })
-
+//
     viewModel.isPermissionGranted.observe(viewLifecycleOwner , Observer {
       viewModel.viewModelScope.launch {
-      viewModel.getLaslLocation(fusedLocationClient , requireActivity())}
+      viewModel.OnLocationGranted()}
     })
 
-    requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    viewModel.foucsOnSearch.observe(viewLifecycleOwner , Observer {
+      if (it ){
+        binding.searchView.requestFocus()
+      }
+    })
+    val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
 
+      Log.d("isPermissionGranted" , isPermissionGranted.toString())
+      if (isPermissionGranted)
+        viewModel.LocationIsGranted()
+      else
+        viewModel.OnLocationDismissed()
+
+    }
+    checkLocationPermission( requireActivity() ,requestPermission)
     return binding.root
   }
-  val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionNeeded: Boolean ->
 
-    Log.d("isPermissionGranted" , isPermissionNeeded.toString())
-    if (!isPermissionNeeded)
+
+  override fun onResume() {
+    if (checkFineLocation(requireActivity()))
       viewModel.LocationIsGranted()
-
+    super.onResume()
   }
-
-
 
 
 
