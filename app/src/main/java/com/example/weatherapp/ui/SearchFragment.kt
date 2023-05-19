@@ -10,6 +10,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.weatherapp.R
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.databinding.FragmentSearchBinding
 import com.example.weatherapp.utils.checkFineLocation
@@ -57,7 +60,15 @@ class SearchFragment : Fragment() {
     viewModel.currentDescription.observe(viewLifecycleOwner, Observer {
       binding.description.text = it
     })
-//
+
+    viewModel.currentIcon.observe(viewLifecycleOwner , Observer {
+      val iconUrl = getString(R.string.baseIconUrl)+it+"@2x.png"
+
+      Glide.with(requireContext())
+        .load(iconUrl)
+        .apply( RequestOptions().override(600, 600))
+        .into(binding.weatherIcon)
+        })
     viewModel.isPermissionGranted.observe(viewLifecycleOwner , Observer {
       viewModel.viewModelScope.launch {
       viewModel.OnLocationGranted()}

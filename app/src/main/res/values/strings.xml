@@ -12,4 +12,6 @@
   <string name="pressure">4</string>
   <string name="description">Dummy</string>
   <string name="humidity">4</string>
+  <string name="baseIconUrl">https://openweathermap.org/img/wn/</string>
+
 </resources>

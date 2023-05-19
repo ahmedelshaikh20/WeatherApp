@@ -43,6 +43,11 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
   val currentPressure: LiveData<String>
     get() = _currentPressure
 
+  private var _currentIcon = MutableLiveData<String>()
+  val currentIcon: LiveData<String>
+    get() = _currentIcon
+
+
   private var _isPermissionGranted = MutableLiveData<Boolean>()
   val isPermissionGranted: LiveData<Boolean>
     get() = _isPermissionGranted
@@ -84,7 +89,7 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
     _currentDescription.value= weatherResponse.value?.weather?.get(0)?.description
     _currentPressure.value = weatherResponse.value?.main?.pressure.toString()
     _currenttime.value=getDate(weatherResponse.value?.dt!!, weatherResponse.value!!.timezone)
-
+_currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
   }
   private fun getDate(dt: Long, timezone: Int): String {
     val date = Date((dt) * 1000)
