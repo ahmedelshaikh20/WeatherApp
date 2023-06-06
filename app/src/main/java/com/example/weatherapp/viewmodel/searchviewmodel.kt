@@ -1,12 +1,13 @@
 package com.example.weatherapp.viewmodel
 
-import android.app.Activity
+
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.locationservices.getLastKnownLocation
 import com.example.weatherapp.model.WeatherApiResponse
+import com.example.weatherapp.model.geocodingmodel.GeocodingApiResponse
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -18,6 +19,9 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
   private var _weatherResponse = MutableLiveData<WeatherApiResponse>()
   val weatherResponse: LiveData<WeatherApiResponse>
     get() = _weatherResponse
+  private var _geocodingResponse = MutableLiveData<GeocodingApiResponse>()
+  val geocodingResponse: LiveData<GeocodingApiResponse>
+    get() = _geocodingResponse
 
   private var _currentLocation = MutableLiveData<String>()
   val currentLocation: LiveData<String>
@@ -77,10 +81,13 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
 
 
   suspend fun getWeatherData(latLng: LatLng){
+
     _weatherResponse.value = weatherRepository.getWeatherByLocation(latLng.latitude , latLng.longitude).body()
     updateData()
 
   }
+
+
 
   private fun updateData() {
     _currentLocation.value= weatherResponse.value?.name
@@ -91,6 +98,9 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
     _currenttime.value=getDate(weatherResponse.value?.dt!!, weatherResponse.value!!.timezone)
 _currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
   }
+
+
+
   private fun getDate(dt: Long, timezone: Int): String {
     val date = Date((dt) * 1000)
     val sdf = SimpleDateFormat("yyyy-MM-dd,HH:mm")
@@ -98,6 +108,14 @@ _currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
     val time = formattedDate.split(',').get(1)
     return time;
 
+  }
+
+
+  fun searchTextChanged(searchQuery : String){
+    viewModelScope.launch {
+    val response = weatherRepository.getWeatherByLocation(searchQuery)
+    Log.d("ahmed" , response.body().toString())
+    }
   }
 
 

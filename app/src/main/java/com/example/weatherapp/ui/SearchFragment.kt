@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,7 @@ class SearchFragment : Fragment() {
   private lateinit var binding: FragmentSearchBinding
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private lateinit var weatherRepositry: WeatherRepositry
+
 
 
   override fun onCreateView(
@@ -89,7 +91,27 @@ class SearchFragment : Fragment() {
 
     }
     checkLocationPermission( requireActivity() ,requestPermission)
+    getTextinSearchView()
     return binding.root
+
+  }
+
+  private fun getTextinSearchView() {
+    binding.searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+      override fun onQueryTextSubmit(query: String?): Boolean {
+        TODO("Not yet implemented")
+      }
+
+      override fun onQueryTextChange(newText: String?): Boolean {
+        if (newText != null) {
+          if(newText.length > 2)
+            viewModel.searchTextChanged(newText)
+
+        }
+        return true
+      }
+
+    } )
   }
 
 
@@ -98,7 +120,6 @@ class SearchFragment : Fragment() {
       viewModel.LocationIsGranted()
     super.onResume()
   }
-
 
 
   //TO GET LAST KNOWN LOCATION 3 STEPS NEEDED

@@ -20,12 +20,18 @@ android {
     debug {
       buildConfigField 'String', 'API_KEY', "${API_KEY}"
       buildConfigField 'String', 'BASE_URL', "${BASE_URL}"
+      buildConfigField 'String', 'GECODING_URL', "${GEOCODING_URL}"
+      buildConfigField 'String', 'GEOCDOING_API_KEY', "${GEOCDOING_API_KEY}"
 
     }
     release {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
       buildConfigField 'String', 'API_KEY', "${API_KEY}"
       buildConfigField 'String', 'BASE_URL', "${BASE_URL}"
+      buildConfigField 'String', 'GECODING_URL', "${GEOCODING_URL}"
+      buildConfigField 'String', 'GEOCDOING_API_KEY', "${GEOCDOING_API_KEY}"
+
+
 
       minifyEnabled false
 

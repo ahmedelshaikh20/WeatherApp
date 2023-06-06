@@ -10,7 +10,7 @@
     tools:context=".ui.SearchFragment">
 
 
-  <SearchView
+  <androidx.appcompat.widget.SearchView
     android:id="@+id/searchView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,10 +18,11 @@
     android:layout_marginLeft="24dp"
     android:layout_marginRight="24dp"
     android:background="@drawable/rounded_border"
-    android:iconifiedByDefault="false"
     android:layoutDirection="rtl"
+    android:padding="1dp"
+
     android:queryBackground="@android:color/transparent"
-    android:queryHint="@string/search_location"
+    app:queryHint="@string/search_location"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
