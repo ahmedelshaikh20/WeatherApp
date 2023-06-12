@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/font/fonts.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1890625" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/suggestion_item_layout.xml" value="0.1" />
       </map>
     </option>
   </component>

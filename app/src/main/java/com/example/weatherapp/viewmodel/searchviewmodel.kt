@@ -7,11 +7,13 @@ import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.locationservices.getLastKnownLocation
 import com.example.weatherapp.model.WeatherApiResponse
 import com.example.weatherapp.model.geocodingmodel.GeocodingApiResponse
+import com.example.weatherapp.model.geocodingmodel.Result
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocationClient: FusedLocationProviderClient) : ViewModel() {
 
@@ -22,6 +24,10 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
   private var _geocodingResponse = MutableLiveData<GeocodingApiResponse>()
   val geocodingResponse: LiveData<GeocodingApiResponse>
     get() = _geocodingResponse
+
+  private var _suggesstionList = MutableLiveData<List<String>>()
+  val suggestionList: LiveData<List<String>>
+    get() = _suggesstionList
 
   private var _currentLocation = MutableLiveData<String>()
   val currentLocation: LiveData<String>
@@ -113,8 +119,14 @@ _currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
 
   fun searchTextChanged(searchQuery : String){
     viewModelScope.launch {
-    val response = weatherRepository.getWeatherByLocation(searchQuery)
-    Log.d("ahmed" , response.body().toString())
+      val suggestionList = ArrayList<String>()
+    val response = weatherRepository.getWeatherByLocation(searchQuery).body()?.results
+    response?.forEach {
+      suggestionList.add(it.country)
+    }
+      _suggesstionList.value= suggestionList.toList()
+
+
     }
   }
 
