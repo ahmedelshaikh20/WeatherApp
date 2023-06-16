@@ -1,6 +1,5 @@
 package com.example.weatherapp.api
 
-import com.example.weatherapp.API_KEY
 import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.model.WeatherApiResponse
 import com.example.weatherapp.model.geocodingmodel.GeocodingApiResponse
