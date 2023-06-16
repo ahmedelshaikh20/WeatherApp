@@ -23,13 +23,6 @@ class searchviewmodel(
   private var _weatherResponse = MutableLiveData<WeatherApiResponse>()
   val weatherResponse: LiveData<WeatherApiResponse>
     get() = _weatherResponse
-  private var _geocodingResponse = MutableLiveData<List<Result>>()
-  val geocodingResponse: LiveData<List<Result>>
-    get() = _geocodingResponse
-
-  private var _suggesstionList = MutableLiveData<List<String>>()
-  val suggestionList: LiveData<List<String>>
-    get() = _suggesstionList
 
   private var _currentLocation = MutableLiveData<String>()
   val currentLocation: LiveData<String>
@@ -116,51 +109,6 @@ class searchviewmodel(
     val time = formattedDate.split(',').get(1)
     return time;
 
-  }
-
-
-  fun searchTextChanged(searchQuery: String) {
-    viewModelScope.launch {
-      val suggestionList = ArrayList<String>()
-      val countriesFound = ArrayList<String>()
-      var response = weatherRepository.getWeatherByLocation(searchQuery).body()?.results
-      response?.forEach {
-        if (!countriesFound.contains(it.state+ "," + it.country_code) && !countriesFound.contains(it.city+ "," + it.country_code)) {
-          suggestionList.add(it.formatted)
-          if (it.city == null)
-            countriesFound.add(it.state + "," + it.country_code)
-          else
-            countriesFound.add(it.city + "," + it.country_code)
-
-
-        }
-      }
-      response = deleteRedundency(response, countriesFound)
-      _geocodingResponse.value = response
-      _suggesstionList.value = countriesFound.toList()
-
-
-    }
-  }
-
-  private fun deleteRedundency(
-    response: List<Result>?,
-    countriesFound: ArrayList<String>
-  ): List<Result>? {
-    val newResponse = ArrayList<Result>()
-    countriesFound.forEach {
-      var curr_city = it
-      if (response != null) {
-        for (item in response) {
-          if (curr_city .equals( item.city+","+item.country_code )|| curr_city.equals(item.state+","+item.country_code)) {
-            newResponse.add(item)
-            break
-          }
-        }
-      }
-    }
-    Log.d("NewResponse", newResponse.size.toString())
-    return newResponse.toList()
   }
 
 

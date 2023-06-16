@@ -19,6 +19,7 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -44,8 +45,7 @@ class CurrentLocationFragment : Fragment() {
   private lateinit var weatherRepositry: WeatherRepositry
 private lateinit var cursorAdapter: CursorAdapter
 private lateinit var searchView : SearchView
-lateinit var recyclerView: RecyclerView
-lateinit var searchListAdapter: SearchListAdapter
+
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -58,8 +58,7 @@ lateinit var searchListAdapter: SearchListAdapter
 
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     binding = FragmentCurrentlocationBinding.inflate(inflater)
-    recyclerView=binding.recyclerView
-    searchView = binding.searchView
+    searchView = binding.search
     weatherRepositry = WeatherRepositry()
     val viewModelFactory = SearchViewModelFactory(weatherRepositry , fusedLocationClient)
      viewModel = ViewModelProvider(this, viewModelFactory).get(searchviewmodel::class.java)
@@ -82,24 +81,18 @@ lateinit var searchListAdapter: SearchListAdapter
     viewModel.currentDescription.observe(viewLifecycleOwner, Observer {
       binding.description.text = it
     })
-viewModel.suggestionList.observe(viewLifecycleOwner , Observer {
-  val cursor =
-    MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
-  it.forEachIndexed { index, suggestion ->
-    cursor.addRow(arrayOf(index, suggestion)) }
-  cursorAdapter.changeCursor(cursor)
-  searchView.suggestionsAdapter = cursorAdapter
+//viewModel.suggestionList.observe(viewLifecycleOwner , Observer {
+//  val cursor =
+//    MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
+//  it.forEachIndexed { index, suggestion ->
+//    cursor.addRow(arrayOf(index, suggestion)) }
+//  cursorAdapter.changeCursor(cursor)
+//  searchView.suggestionsAdapter = cursorAdapter
+//
+//})
 
-})
 
 
-    viewModel.geocodingResponse.observe(viewLifecycleOwner , Observer {
-searchListAdapter = SearchListAdapter(it)
-      val layoutManager = LinearLayoutManager(requireContext())
-      recyclerView.layoutManager = layoutManager
-      recyclerView.adapter = searchListAdapter
-      searchListAdapter.notifyDataSetChanged()
-    })
 searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
   override fun onSuggestionSelect(position: Int): Boolean {
     TODO("Not yet implemented")
@@ -131,9 +124,13 @@ searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
 
     viewModel.foucsOnSearch.observe(viewLifecycleOwner , Observer {
       if (it ){
-        binding.searchView.requestFocus()
+        binding.search.requestFocus()
       }
     })
+    binding.search.setOnSearchClickListener {
+Navigation.findNavController(this.requireView()).navigate(R.id.action_currentLocationFragment_to_searchFragment)
+
+    }
     val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
 
       Log.d("isPermissionGranted" , isPermissionGranted.toString())
@@ -144,7 +141,7 @@ searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
 
     }
     checkLocationPermission( requireActivity() ,requestPermission)
-    getTextinSearchView()
+
     return binding.root
 
   }
@@ -164,31 +161,7 @@ searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
 //  return countriesFound.toList()
 //  }
 
-  private fun getTextinSearchView() {
-    binding.searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
-      override fun onQueryTextSubmit(query: String?): Boolean {
-        TODO("Not yet implemented")
-      }
 
-      override fun onQueryTextChange(newText: String?): Boolean {
-
-        if (newText != null) {
-          if(newText.length > 2){
-
-            viewModel.searchTextChanged(newText)
-
-
-
-
-          }
-      }
-
-        return true
-
-      }
-
-    } )
-  }
 
 
   override fun onResume() {

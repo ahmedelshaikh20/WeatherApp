@@ -4,17 +4,17 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   xmlns:tools="http://schemas.android.com/tools"
-android:layout_margin="16dp"
-
+android:layout_margin="8dp"
   android:background="#FDFCFC">
 
   <TextView
     android:id="@+id/cityName"
-    android:layout_width="wrap_content"
+    android:layout_width="240dp"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-
-
+    app:layout_constrainedWidth="true"
+    android:ellipsize="end"
+    android:singleLine="true"
     android:textAppearance="@style/hyderabad"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -31,11 +31,12 @@ android:layout_margin="16dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="@+id/cityName"
     app:layout_constraintStart_toStartOf="@+id/cityName"
-    app:layout_constraintTop_toBottomOf="@+id/cityName"
 
+    app:layout_constraintTop_toBottomOf="@+id/cityName"
     tools:text="20" />
 
   <ImageView
+    android:id="@+id/icon"
 
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -43,9 +44,9 @@ android:layout_margin="16dp"
     android:layout_alignBottom="@+id/temperature"
     android:layout_alignParentEnd="true"
     android:src="@drawable/ic_location_icon"
-    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintBottom_toBottomOf="@+id/temperature"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@+id/cityName"
-    app:layout_constraintTop_toTopOf="parent"></ImageView>
+    app:layout_constraintTop_toTopOf="@+id/temperature"></ImageView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
