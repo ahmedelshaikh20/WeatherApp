@@ -19,11 +19,15 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.weatherapp.R
 import com.example.weatherapp.api.WeatherRepositry
-import com.example.weatherapp.databinding.FragmentSearchBinding
+import com.example.weatherapp.databinding.FragmentCurrentlocationBinding
+import com.example.weatherapp.model.adapter.SearchListAdapter
+import com.example.weatherapp.model.geocodingmodel.Result
 import com.example.weatherapp.utils.checkFineLocation
 import com.example.weatherapp.utils.checkLocationPermission
 import com.example.weatherapp.viewmodel.SearchViewModelFactory
@@ -33,13 +37,15 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
 
 
-class SearchFragment : Fragment() {
+class CurrentLocationFragment : Fragment() {
   private lateinit var viewModel: searchviewmodel
-  private lateinit var binding: FragmentSearchBinding
+  private lateinit var binding: FragmentCurrentlocationBinding
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private lateinit var weatherRepositry: WeatherRepositry
 private lateinit var cursorAdapter: CursorAdapter
 private lateinit var searchView : SearchView
+lateinit var recyclerView: RecyclerView
+lateinit var searchListAdapter: SearchListAdapter
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -47,11 +53,12 @@ private lateinit var searchView : SearchView
   ): View? {
     val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
     val to = intArrayOf(R.id.searchItemID)
-    cursorAdapter = SimpleCursorAdapter(context, R.layout.suggestion_item_layout, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
+    cursorAdapter = SimpleCursorAdapter(context, R.layout.auto_complete_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
 
 
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-    binding = FragmentSearchBinding.inflate(inflater)
+    binding = FragmentCurrentlocationBinding.inflate(inflater)
+    recyclerView=binding.recyclerView
     searchView = binding.searchView
     weatherRepositry = WeatherRepositry()
     val viewModelFactory = SearchViewModelFactory(weatherRepositry , fusedLocationClient)
@@ -84,6 +91,15 @@ viewModel.suggestionList.observe(viewLifecycleOwner , Observer {
   searchView.suggestionsAdapter = cursorAdapter
 
 })
+
+
+    viewModel.geocodingResponse.observe(viewLifecycleOwner , Observer {
+searchListAdapter = SearchListAdapter(it)
+      val layoutManager = LinearLayoutManager(requireContext())
+      recyclerView.layoutManager = layoutManager
+      recyclerView.adapter = searchListAdapter
+      searchListAdapter.notifyDataSetChanged()
+    })
 searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
   override fun onSuggestionSelect(position: Int): Boolean {
     TODO("Not yet implemented")
@@ -91,10 +107,10 @@ searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
 
   @SuppressLint("Range")
   override fun onSuggestionClick(position: Int): Boolean {
-    val cursor = searchView.suggestionsAdapter.getItem(position) as Cursor
-    val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
-    searchView.setQuery(selection, false)
-    Toast.makeText(requireContext() , selection , Toast.LENGTH_SHORT).show()
+//    val cursor = searchView.suggestionsAdapter.getItem(position) as Cursor
+//    val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
+//    searchView.setQuery(selection, false)
+//    Toast.makeText(requireContext() , selection , Toast.LENGTH_SHORT).show()
     return true
   }
 
@@ -132,6 +148,21 @@ searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
     return binding.root
 
   }
+
+//  private fun findUniqueCountries(response : List<Result>): List<String> {
+//    val countriesFound = ArrayList<String>()
+//    response?.forEach {
+//      if (!countriesFound.contains(it.state)&&!countriesFound.contains(it.city)){
+//        if(it.city==null)
+//          countriesFound.add(it.state)
+//        else
+//          countriesFound.add(it.city)
+//
+//
+//      }
+//  }
+//  return countriesFound.toList()
+//  }
 
   private fun getTextinSearchView() {
     binding.searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{

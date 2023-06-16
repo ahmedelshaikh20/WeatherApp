@@ -13,5 +13,6 @@
   <string name="description">Dummy</string>
   <string name="humidity">4</string>
   <string name="baseIconUrl">https://openweathermap.org/img/wn/</string>
+    <string name="mumbai">mumbai mumbai</string>
 
 </resources>

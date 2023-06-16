@@ -3,12 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/drawable/divider.xml" value="0.153" />
-        <entry key="app/src/main/res/drawable/rounded_border.xml" value="0.153" />
-        <entry key="app/src/main/res/font/fonts.xml" value="0.21822916666666667" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1890625" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/suggestion_item_layout.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/auto_complete_item.xml" value="0.18958031837916064" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.19012345679012346" />
+        <entry key="app/src/main/res/layout/suggestion_item_layout.xml" value="0.43863067626953123" />
       </map>
     </option>
   </component>

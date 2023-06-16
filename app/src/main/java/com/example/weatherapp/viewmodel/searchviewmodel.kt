@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.locationservices.getLastKnownLocation
 import com.example.weatherapp.model.WeatherApiResponse
-import com.example.weatherapp.model.geocodingmodel.GeocodingApiResponse
 import com.example.weatherapp.model.geocodingmodel.Result
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
@@ -15,14 +14,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocationClient: FusedLocationProviderClient) : ViewModel() {
+class searchviewmodel(
+  val weatherRepository: WeatherRepositry,
+  val fusedLocationClient: FusedLocationProviderClient
+) : ViewModel() {
 
 
   private var _weatherResponse = MutableLiveData<WeatherApiResponse>()
   val weatherResponse: LiveData<WeatherApiResponse>
     get() = _weatherResponse
-  private var _geocodingResponse = MutableLiveData<GeocodingApiResponse>()
-  val geocodingResponse: LiveData<GeocodingApiResponse>
+  private var _geocodingResponse = MutableLiveData<List<Result>>()
+  val geocodingResponse: LiveData<List<Result>>
     get() = _geocodingResponse
 
   private var _suggesstionList = MutableLiveData<List<String>>()
@@ -38,7 +40,7 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
     get() = _currentweather
 
 
-  private var _currenttime= MutableLiveData<String>()
+  private var _currenttime = MutableLiveData<String>()
   val currenttimer: LiveData<String>
     get() = _currenttime
 
@@ -70,41 +72,41 @@ class searchviewmodel(val weatherRepository: WeatherRepositry , val fusedLocatio
     _currentLocation.value = "Cairo"
   }
 
-   suspend fun OnLocationGranted() {
-     viewModelScope.launch {
-    val latLng = getLastKnownLocation(fusedLocationClient)
-     latLng?.let { getWeatherData(it) }}
+  suspend fun OnLocationGranted() {
+    viewModelScope.launch {
+      val latLng = getLastKnownLocation(fusedLocationClient)
+      latLng?.let { getWeatherData(it) }
+    }
 
   }
 
-  fun OnLocationDismissed(){
+  fun OnLocationDismissed() {
     _foucsOnSearch.value = true
   }
 
-  fun LocationIsGranted(){
-    _isPermissionGranted.value= true
+  fun LocationIsGranted() {
+    _isPermissionGranted.value = true
   }
 
 
-  suspend fun getWeatherData(latLng: LatLng){
+  suspend fun getWeatherData(latLng: LatLng) {
 
-    _weatherResponse.value = weatherRepository.getWeatherByLocation(latLng.latitude , latLng.longitude).body()
+    _weatherResponse.value =
+      weatherRepository.getWeatherByLocation(latLng.latitude, latLng.longitude).body()
     updateData()
 
   }
 
 
-
   private fun updateData() {
-    _currentLocation.value= weatherResponse.value?.name
-    _currentweather.value= weatherResponse.value?.main?.temperature.toString()
-    _currentHumidity.value=weatherResponse.value?.main?.humidity.toString()
-    _currentDescription.value= weatherResponse.value?.weather?.get(0)?.description
+    _currentLocation.value = weatherResponse.value?.name
+    _currentweather.value = weatherResponse.value?.main?.temperature.toString()
+    _currentHumidity.value = weatherResponse.value?.main?.humidity.toString()
+    _currentDescription.value = weatherResponse.value?.weather?.get(0)?.description
     _currentPressure.value = weatherResponse.value?.main?.pressure.toString()
-    _currenttime.value=getDate(weatherResponse.value?.dt!!, weatherResponse.value!!.timezone)
-_currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
+    _currenttime.value = getDate(weatherResponse.value?.dt!!, weatherResponse.value!!.timezone)
+    _currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
   }
-
 
 
   private fun getDate(dt: Long, timezone: Int): String {
@@ -117,32 +119,62 @@ _currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
   }
 
 
-  fun searchTextChanged(searchQuery : String){
+  fun searchTextChanged(searchQuery: String) {
     viewModelScope.launch {
       val suggestionList = ArrayList<String>()
-    val response = weatherRepository.getWeatherByLocation(searchQuery).body()?.results
-    response?.forEach {
-      suggestionList.add(it.country)
-    }
-      _suggesstionList.value= suggestionList.toList()
+      val countriesFound = ArrayList<String>()
+      var response = weatherRepository.getWeatherByLocation(searchQuery).body()?.results
+      response?.forEach {
+        if (!countriesFound.contains(it.state+ "," + it.country_code) && !countriesFound.contains(it.city+ "," + it.country_code)) {
+          suggestionList.add(it.formatted)
+          if (it.city == null)
+            countriesFound.add(it.state + "," + it.country_code)
+          else
+            countriesFound.add(it.city + "," + it.country_code)
+
+
+        }
+      }
+      response = deleteRedundency(response, countriesFound)
+      _geocodingResponse.value = response
+      _suggesstionList.value = countriesFound.toList()
 
 
     }
+  }
+
+  private fun deleteRedundency(
+    response: List<Result>?,
+    countriesFound: ArrayList<String>
+  ): List<Result>? {
+    val newResponse = ArrayList<Result>()
+    countriesFound.forEach {
+      var curr_city = it
+      if (response != null) {
+        for (item in response) {
+          if (curr_city .equals( item.city+","+item.country_code )|| curr_city.equals(item.state+","+item.country_code)) {
+            newResponse.add(item)
+            break
+          }
+        }
+      }
+    }
+    Log.d("NewResponse", newResponse.size.toString())
+    return newResponse.toList()
   }
 
 
 }
 
 
-
-
 //Too pass an argument to viewmodel constructor we need to create our own implementation of the viewmodelProvider Factory
 
 @Suppress("UNCHECKED_CAST")
-class SearchViewModelFactory (
+class SearchViewModelFactory(
   private val weatherRepositry: WeatherRepositry,
-  private val fusedLocationClient: FusedLocationProviderClient) : ViewModelProvider.NewInstanceFactory() {
+  private val fusedLocationClient: FusedLocationProviderClient
+) : ViewModelProvider.NewInstanceFactory() {
   override fun <T : ViewModel> create(modelClass: Class<T>) =
-    (searchviewmodel(weatherRepositry , fusedLocationClient) as T)
+    (searchviewmodel(weatherRepositry, fusedLocationClient) as T)
 }
 
