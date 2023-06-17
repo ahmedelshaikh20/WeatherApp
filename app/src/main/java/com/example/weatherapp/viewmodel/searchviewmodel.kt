@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.locationservices.getLastKnownLocation
 import com.example.weatherapp.model.WeatherApiResponse
+import com.example.weatherapp.model.WeatherDataItem
 import com.example.weatherapp.model.geocodingmodel.Result
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
@@ -20,8 +21,8 @@ class searchviewmodel(
 ) : ViewModel() {
 
 
-  private var _weatherResponse = MutableLiveData<WeatherApiResponse>()
-  val weatherResponse: LiveData<WeatherApiResponse>
+  private var _weatherResponse = MutableLiveData<WeatherDataItem>()
+  val weatherResponse: LiveData<WeatherDataItem>
     get() = _weatherResponse
 
   private var _currentLocation = MutableLiveData<String>()
@@ -85,7 +86,7 @@ class searchviewmodel(
   suspend fun getWeatherData(latLng: LatLng) {
 
     _weatherResponse.value =
-      weatherRepository.getWeatherByLocation(latLng.latitude, latLng.longitude).body()
+      weatherRepository.getWeatherByLocation(latLng.latitude, latLng.longitude)
     updateData()
 
   }
@@ -93,16 +94,16 @@ class searchviewmodel(
 
   private fun updateData() {
     _currentLocation.value = weatherResponse.value?.name
-    _currentweather.value = weatherResponse.value?.main?.temperature.toString()
-    _currentHumidity.value = weatherResponse.value?.main?.humidity.toString()
-    _currentDescription.value = weatherResponse.value?.weather?.get(0)?.description
-    _currentPressure.value = weatherResponse.value?.main?.pressure.toString()
-    _currenttime.value = getDate(weatherResponse.value?.dt!!, weatherResponse.value!!.timezone)
-    _currentIcon.value = weatherResponse.value?.weather?.get(0)?.icon.toString()
+    _currentweather.value = weatherResponse.value?.temperature.toString()
+    _currentHumidity.value = weatherResponse.value?.humidity.toString()
+    _currentDescription.value = weatherResponse.value?.description
+    _currentPressure.value = weatherResponse.value?.pressure.toString()
+    _currenttime.value = getDate(weatherResponse.value?.time!!)
+    _currentIcon.value = weatherResponse.value?.icon.toString()
   }
 
 
-  private fun getDate(dt: Long, timezone: Int): String {
+  private fun getDate(dt: Long): String {
     val date = Date((dt) * 1000)
     val sdf = SimpleDateFormat("yyyy-MM-dd,HH:mm")
     val formattedDate = sdf.format(date)

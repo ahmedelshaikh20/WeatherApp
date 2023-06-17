@@ -81,40 +81,14 @@ private lateinit var searchView : SearchView
     viewModel.currentDescription.observe(viewLifecycleOwner, Observer {
       binding.description.text = it
     })
-//viewModel.suggestionList.observe(viewLifecycleOwner , Observer {
-//  val cursor =
-//    MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
-//  it.forEachIndexed { index, suggestion ->
-//    cursor.addRow(arrayOf(index, suggestion)) }
-//  cursorAdapter.changeCursor(cursor)
-//  searchView.suggestionsAdapter = cursorAdapter
-//
-//})
 
-
-
-searchView.setOnSuggestionListener( object : SearchView.OnSuggestionListener{
-  override fun onSuggestionSelect(position: Int): Boolean {
-    TODO("Not yet implemented")
-  }
-
-  @SuppressLint("Range")
-  override fun onSuggestionClick(position: Int): Boolean {
-//    val cursor = searchView.suggestionsAdapter.getItem(position) as Cursor
-//    val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
-//    searchView.setQuery(selection, false)
-//    Toast.makeText(requireContext() , selection , Toast.LENGTH_SHORT).show()
-    return true
-  }
-
-})
 
     viewModel.currentIcon.observe(viewLifecycleOwner , Observer {
       val iconUrl = getString(R.string.baseIconUrl)+it+"@2x.png"
 
       Glide.with(requireContext())
         .load(iconUrl)
-        .apply( RequestOptions().override(600, 600))
+        .apply( RequestOptions().override(200, 200))
         .into(binding.weatherIcon)
         })
     viewModel.isPermissionGranted.observe(viewLifecycleOwner , Observer {
@@ -146,20 +120,6 @@ Navigation.findNavController(this.requireView()).navigate(R.id.action_currentLoc
 
   }
 
-//  private fun findUniqueCountries(response : List<Result>): List<String> {
-//    val countriesFound = ArrayList<String>()
-//    response?.forEach {
-//      if (!countriesFound.contains(it.state)&&!countriesFound.contains(it.city)){
-//        if(it.city==null)
-//          countriesFound.add(it.state)
-//        else
-//          countriesFound.add(it.city)
-//
-//
-//      }
-//  }
-//  return countriesFound.toList()
-//  }
 
 
 

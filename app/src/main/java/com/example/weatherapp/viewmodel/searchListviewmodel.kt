@@ -3,18 +3,20 @@ package com.example.weatherapp.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
+import com.example.weatherapp.model.SugesstionDataItem
 import com.example.weatherapp.model.WeatherApiResponse
+import com.example.weatherapp.model.WeatherDataItem
 import com.example.weatherapp.model.geocodingmodel.Result
 import kotlinx.coroutines.launch
 
 class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel() {
 
-  private var _geocodingResponse = MutableLiveData<List<Result>>()
-  val geocodingResponse: LiveData<List<Result>>
+  private var _geocodingResponse = MutableLiveData<List<SugesstionDataItem>>()
+  val geocodingResponse: LiveData<List<SugesstionDataItem>>
     get() = _geocodingResponse
 
-  private var _suggestionList = MutableLiveData<List<WeatherApiResponse>>()
-  val suggestionList: LiveData<List<WeatherApiResponse>>
+  private var _suggestionList = MutableLiveData<List<WeatherDataItem>>()
+  val suggestionList: LiveData<List<WeatherDataItem>>
     get() = _suggestionList
 
 
@@ -24,32 +26,32 @@ class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel()
     viewModelScope.launch {
       val suggestionList = ArrayList<String>()
       val countriesFound = ArrayList<String>()
-      var response = weatherRepository.getWeatherByLocation(searchQuery).body()?.results
-      response?.forEach {
-        if (!countriesFound.contains(it.state + "," + it.country_code) && !countriesFound.contains(
-            it.city + "," + it.country_code
+      var results = weatherRepository.getWeatherByLocation(searchQuery)
+      results?.forEach {
+        if (!countriesFound.contains(it.state + "," + it.countryCode) && !countriesFound.contains(
+            it.city + "," + it.countryCode
           )
         ) {
-          suggestionList.add(it.formatted)
+          suggestionList.add(it.formattedAddress)
           if (it.city == null)
-            countriesFound.add(it.state + "," + it.country_code)
+            countriesFound.add(it.state + "," + it.countryCode)
           else
-            countriesFound.add(it.city + "," + it.country_code)
+            countriesFound.add(it.city + "," + it.countryCode)
         }
       }
-      response = deleteRedundancy(response, countriesFound)
-      _geocodingResponse.value = response
+      results = deleteRedundancy(results, countriesFound)
+      _geocodingResponse.value = results
       updateSuggestionList()
 
     }
   }
 
   private fun updateSuggestionList() {
-    val res = ArrayList<WeatherApiResponse>()
+    val res = ArrayList<WeatherDataItem>()
     geocodingResponse.value?.forEach {
       viewModelScope.launch {
-        val itemRes = weatherRepository.getWeatherByLocation(it.lat , it.lon)
-        itemRes.body()?.let { it1 -> res.add(it1) }
+        val itemRes = weatherRepository.getWeatherByLocation(it.latitude , it.longitude)
+        itemRes?.let { it1 -> res.add(it1) }
         _suggestionList.value = res.toList()
 
       }
@@ -60,22 +62,21 @@ class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel()
   }
 
   private fun deleteRedundancy(
-    response: List<Result>?,
+    response: List<SugesstionDataItem>?,
     countriesFound: ArrayList<String>
-  ): List<Result>? {
-    val newResponse = ArrayList<Result>()
+  ): List<SugesstionDataItem> {
+    val newResponse = ArrayList<SugesstionDataItem>()
     countriesFound.forEach {
       var curr_city = it
       if (response != null) {
         for (item in response) {
-          if (curr_city.equals(item.city + "," + item.country_code) || curr_city.equals(item.state + "," + item.country_code)) {
+          if (curr_city.equals(item.city + "," + item.countryCode) || curr_city.equals(item.state + "," + item.countryCode)) {
             newResponse.add(item)
             break
           }
         }
       }
     }
-    Log.d("NewResponse", newResponse.size.toString())
     return newResponse.toList()
   }
 

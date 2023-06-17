@@ -13,15 +13,16 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.SuggestionItemLayoutBinding
 import com.example.weatherapp.model.WeatherApiResponse
+import com.example.weatherapp.model.WeatherDataItem
 
-class SearchListAdapter(val res: List<WeatherApiResponse>, val context: Context) :
+class SearchListAdapter(val res: List<WeatherDataItem>, val context: Context) :
   RecyclerView.Adapter<SearchListAdapter.ResultViewHolder>() {
-  class ResultViewHolder(private val itemBinding: SuggestionItemLayoutBinding) :
+  class ResultViewHolder(itemBinding: SuggestionItemLayoutBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
     var city: TextView
     var temprature: TextView
     var imageView: ImageView
-var iconUrl :String
+    var iconUrl: String
 
     init {
       city = itemBinding.cityName
@@ -33,19 +34,20 @@ var iconUrl :String
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
-    val binding = SuggestionItemLayoutBinding.inflate(LayoutInflater.from(parent.context) , parent , false)
+    val binding =
+      SuggestionItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     return ResultViewHolder(binding)
   }
 
   override fun onBindViewHolder(holder: ResultViewHolder, position: Int) {
-    val resultItem = res.get(position)
+    val resultItem = res[position]
 
     if (resultItem.name != null) {
-      holder.city.text = resultItem.name + "," + resultItem.sys.country
+      holder.city.text = resultItem.name + "," + resultItem.country.capitalize()
     } else
-      holder.city.text = resultItem.name + "," + resultItem.sys.country.capitalize()
-    holder.temprature.text = resultItem.main.temperature.toString()
-    val currentIcon = resultItem.weather?.get(0)?.icon.toString()
+      holder.city.text = resultItem.name + "," + resultItem.country.capitalize()
+    holder.temprature.text = resultItem.temperature.toString()
+    val currentIcon = resultItem.icon
     val iconUrl = holder.iconUrl + currentIcon + "@2x.png"
     Glide.with(context)
       .load(iconUrl)
