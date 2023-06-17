@@ -1,11 +1,8 @@
 package com.example.weatherapp.api
 
 import com.example.weatherapp.BuildConfig
-import com.example.weatherapp.model.SugesstionDataItem
-import com.example.weatherapp.model.WeatherApiResponse
+import com.example.weatherapp.model.SuggestionDataItem
 import com.example.weatherapp.model.WeatherDataItem
-import com.example.weatherapp.model.geocodingmodel.GeocodingApiResponse
-import retrofit2.Response
 
 class WeatherRepositry() {
 
@@ -29,17 +26,17 @@ class WeatherRepositry() {
 
   }
 
-  suspend fun getWeatherByLocation(location: String): List<SugesstionDataItem>{
+  suspend fun getWeatherByLocation(location: String): List<SuggestionDataItem>{
 
     val response = RetrofitInstances.geocodingApi.getAllLocationPrediction(
       location,
       "json",
       BuildConfig.GEOCDOING_API_KEY
     )
-    val resultList = ArrayList<SugesstionDataItem>()
+    val resultList = ArrayList<SuggestionDataItem>()
     response.body()?.results?.let {
       resultList.addAll(it.map {
-        SugesstionDataItem(
+        SuggestionDataItem(
           it.city,
           it.country,
           it.country_code,

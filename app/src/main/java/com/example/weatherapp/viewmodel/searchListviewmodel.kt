@@ -3,16 +3,14 @@ package com.example.weatherapp.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
-import com.example.weatherapp.model.SugesstionDataItem
-import com.example.weatherapp.model.WeatherApiResponse
+import com.example.weatherapp.model.SuggestionDataItem
 import com.example.weatherapp.model.WeatherDataItem
-import com.example.weatherapp.model.geocodingmodel.Result
 import kotlinx.coroutines.launch
 
 class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel() {
 
-  private var _geocodingResponse = MutableLiveData<List<SugesstionDataItem>>()
-  val geocodingResponse: LiveData<List<SugesstionDataItem>>
+  private var _geocodingResponse = MutableLiveData<List<SuggestionDataItem>>()
+  val geocodingResponse: LiveData<List<SuggestionDataItem>>
     get() = _geocodingResponse
 
   private var _suggestionList = MutableLiveData<List<WeatherDataItem>>()
@@ -62,10 +60,10 @@ class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel()
   }
 
   private fun deleteRedundancy(
-    response: List<SugesstionDataItem>?,
+    response: List<SuggestionDataItem>?,
     countriesFound: ArrayList<String>
-  ): List<SugesstionDataItem> {
-    val newResponse = ArrayList<SugesstionDataItem>()
+  ): List<SuggestionDataItem> {
+    val newResponse = ArrayList<SuggestionDataItem>()
     countriesFound.forEach {
       var curr_city = it
       if (response != null) {

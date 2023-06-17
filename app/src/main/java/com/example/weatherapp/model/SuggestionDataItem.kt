@@ -1,6 +1,6 @@
 package com.example.weatherapp.model
 
-data class SugesstionDataItem(
+data class SuggestionDataItem(
   var city :String? ,
   var country :String,
   var countryCode : String,
