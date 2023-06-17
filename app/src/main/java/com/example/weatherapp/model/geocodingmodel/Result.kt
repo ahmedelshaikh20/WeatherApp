@@ -1,8 +1,12 @@
 package com.example.weatherapp.model.geocodingmodel
 
+import com.google.gson.annotations.SerializedName
+
 data class Result(
-    val address_line1: String,
-    val address_line2: String,
+  @SerializedName("address_line1")
+  val addressline1: String,
+  @SerializedName("address_line2")
+  val addressline2: String,
     val category: String,
     val city: String,
     val country: String,
