@@ -1,23 +1,18 @@
 package com.example.weatherapp.viewmodel
 
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
-import com.example.weatherapp.locationservices.getLastKnownLocation
-import com.example.weatherapp.model.WeatherApiResponse
+import com.example.weatherapp.locationservices.LocationService
 import com.example.weatherapp.model.WeatherDataItem
-import com.example.weatherapp.model.geocodingmodel.Result
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class searchviewmodel(
   val weatherRepository: WeatherRepositry,
-  val fusedLocationClient: FusedLocationProviderClient
+  val locationService: LocationService
 ) : ViewModel() {
 
 
@@ -68,7 +63,7 @@ class searchviewmodel(
 
   suspend fun OnLocationGranted() {
     viewModelScope.launch {
-      val latLng = getLastKnownLocation(fusedLocationClient)
+      val latLng = locationService.getLastKnownLocation()
       latLng?.let { getWeatherData(it) }
     }
 
@@ -121,9 +116,9 @@ class searchviewmodel(
 @Suppress("UNCHECKED_CAST")
 class SearchViewModelFactory(
   private val weatherRepositry: WeatherRepositry,
-  private val fusedLocationClient: FusedLocationProviderClient
+  private val locationService: LocationService
 ) : ViewModelProvider.NewInstanceFactory() {
   override fun <T : ViewModel> create(modelClass: Class<T>) =
-    (searchviewmodel(weatherRepositry, fusedLocationClient) as T)
+    (searchviewmodel(weatherRepositry, locationService) as T)
 }
 

@@ -9,7 +9,12 @@ import retrofit2.http.Query
 interface WeatherApi {
 
   @GET("weather")
-  suspend fun getCurrentWeather(@Query("lat") lat : Double , @Query("lon") lon : Double , @Query("appid") appid : String , @Query("units") units : String ) : Response<WeatherApiResponse>
+  suspend fun getCurrentWeather(
+    @Query("lat") lat: Double,
+    @Query("lon") lon: Double,
+    @Query("appid") appid: String,
+    @Query("units") units: String
+  ): Response<WeatherApiResponse>
 
 }
 
@@ -17,7 +22,11 @@ interface WeatherApi {
 interface GeocodingApi {
 
   @GET("autocomplete")
-  suspend fun getAllLocationPrediction(@Query("text") country : String , @Query("format") format : String , @Query("apiKey") apiKey : String ) : Response<GeocodingApiResponse>
+  suspend fun getAllLocationPrediction(
+    @Query("text") country: String,
+    @Query("format") format: String = "json",
+    @Query("apiKey") apiKey: String
+  ): Response<GeocodingApiResponse>
 
 
 }

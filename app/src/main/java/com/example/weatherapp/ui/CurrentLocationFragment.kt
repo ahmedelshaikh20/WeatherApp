@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.weatherapp.R
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.databinding.FragmentCurrentlocationBinding
+import com.example.weatherapp.locationservices.LocationService
 import com.example.weatherapp.model.adapter.SearchListAdapter
 import com.example.weatherapp.model.geocodingmodel.Result
 import com.example.weatherapp.utils.checkFineLocation
@@ -43,24 +44,20 @@ class CurrentLocationFragment : Fragment() {
   private lateinit var binding: FragmentCurrentlocationBinding
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private lateinit var weatherRepositry: WeatherRepositry
-private lateinit var cursorAdapter: CursorAdapter
 private lateinit var searchView : SearchView
+private lateinit var locationService: LocationService
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
-    val to = intArrayOf(R.id.searchItemID)
-    cursorAdapter = SimpleCursorAdapter(context, R.layout.auto_complete_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
-
-
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+    locationService = LocationService(fusedLocationClient)
     binding = FragmentCurrentlocationBinding.inflate(inflater)
     searchView = binding.search
     weatherRepositry = WeatherRepositry()
-    val viewModelFactory = SearchViewModelFactory(weatherRepositry , fusedLocationClient)
+    val viewModelFactory = SearchViewModelFactory(weatherRepositry , locationService)
      viewModel = ViewModelProvider(this, viewModelFactory).get(searchviewmodel::class.java)
     viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
       binding.currentLocation.text = it

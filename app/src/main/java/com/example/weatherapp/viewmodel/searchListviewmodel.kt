@@ -18,8 +18,6 @@ class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel()
     get() = _suggestionList
 
 
-
-
   fun searchTextChanged(searchQuery: String) {
     viewModelScope.launch {
       val suggestionList = ArrayList<String>()
@@ -48,7 +46,7 @@ class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel()
     val res = ArrayList<WeatherDataItem>()
     geocodingResponse.value?.forEach {
       viewModelScope.launch {
-        val itemRes = weatherRepository.getWeatherByLocation(it.latitude , it.longitude)
+        val itemRes = weatherRepository.getWeatherByLocation(it.latitude, it.longitude)
         itemRes?.let { it1 -> res.add(it1) }
         _suggestionList.value = res.toList()
 
@@ -56,7 +54,6 @@ class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel()
 
     }
 
-    Log.d("LOOOL" , res.toString())
   }
 
   private fun deleteRedundancy(

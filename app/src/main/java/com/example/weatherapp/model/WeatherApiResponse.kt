@@ -1,5 +1,7 @@
 package com.example.weatherapp.model
 
+import com.google.gson.annotations.SerializedName
+
 data class WeatherApiResponse(
   val base: String,
   val clouds: Clouds,
@@ -10,8 +12,10 @@ data class WeatherApiResponse(
   val main: Main,
   val name: String,
   val rain: Rain = Rain(),
-  val sys: Sys,
-  val timezone: Int,
+  @SerializedName("sys")
+  val countryInfo: CountryInfo,
+  @SerializedName("timezone")
+  val timeZone: Int,
   val visibility: Int,
   val weather: List<Weather>,
   val wind: Wind

@@ -1,6 +1,6 @@
 package com.example.weatherapp.model
 
-data class Sys(
+data class CountryInfo(
     val country: String,
     val id: Int,
     val sunrise: Int,

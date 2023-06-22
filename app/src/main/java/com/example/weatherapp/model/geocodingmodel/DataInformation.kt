@@ -1,8 +1,8 @@
 package com.example.weatherapp.model.geocodingmodel
 
-data class Datasource(
+data class DataInformation(
     val attribution: String,
     val license: String,
-    val sourcename: String,
+    val sourceName: String,
     val url: String
 )

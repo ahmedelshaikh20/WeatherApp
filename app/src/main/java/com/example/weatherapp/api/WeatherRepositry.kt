@@ -13,7 +13,7 @@ class WeatherRepositry() {
     val result = response?.let {
       WeatherDataItem(
         it.name,
-        it.sys.country,
+        it.countryInfo.country,
         it.weather[0].description,
         it.main.temperature,
         it.main.humidity,
@@ -26,12 +26,11 @@ class WeatherRepositry() {
 
   }
 
-  suspend fun getWeatherByLocation(location: String): List<SuggestionDataItem>{
+  suspend fun getWeatherByLocation(location: String): List<SuggestionDataItem> {
 
     val response = RetrofitInstances.geocodingApi.getAllLocationPrediction(
       location,
-      "json",
-      BuildConfig.GEOCDOING_API_KEY
+      apiKey = BuildConfig.GEOCDOING_API_KEY
     )
     val resultList = ArrayList<SuggestionDataItem>()
     response.body()?.results?.let {
@@ -45,7 +44,7 @@ class WeatherRepositry() {
           it.lat,
           it.lon
         )
-    } )
+      })
     }
 
     return resultList.toList()

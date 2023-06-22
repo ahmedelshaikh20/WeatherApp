@@ -18,25 +18,24 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-//
+class LocationService(val fusedLocationClient: FusedLocationProviderClient) {
+  var userLocation: LatLng? = null
 
-var userLocation: LatLng? = null
-
-@SuppressLint("MissingPermission")
-suspend fun getLastKnownLocation(fusedLocationClient: FusedLocationProviderClient): LatLng? {
-  return suspendCoroutine {
-    fusedLocationClient.lastLocation
-      .addOnSuccessListener { newlocation: Location? ->
-        Log.d("LOCATION", newlocation.toString())
-        if (newlocation == null) {
+  @SuppressLint("MissingPermission")
+  suspend fun getLastKnownLocation(): LatLng? {
+    return suspendCoroutine {
+      fusedLocationClient.lastLocation
+        .addOnSuccessListener { newlocation: Location? ->
+          if (newlocation == null) {
+            it.resume(userLocation)
+          } else {
+            userLocation = LatLng(newlocation.latitude, newlocation.longitude)
+          }
           it.resume(userLocation)
-        } else {
-          userLocation = LatLng(newlocation.latitude, newlocation.longitude)
         }
-        it.resume(userLocation)
-      }
+
+    }
 
   }
-
 }
 
