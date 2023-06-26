@@ -19,10 +19,10 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class LocationService(val fusedLocationClient: FusedLocationProviderClient) {
-  var userLocation: LatLng? = null
 
   @SuppressLint("MissingPermission")
   suspend fun getLastKnownLocation(): LatLng? {
+    var userLocation: LatLng? = null
     return suspendCoroutine {
       fusedLocationClient.lastLocation
         .addOnSuccessListener { newlocation: Location? ->
@@ -30,8 +30,8 @@ class LocationService(val fusedLocationClient: FusedLocationProviderClient) {
             it.resume(userLocation)
           } else {
             userLocation = LatLng(newlocation.latitude, newlocation.longitude)
+            it.resume(userLocation)
           }
-          it.resume(userLocation)
         }
 
     }
