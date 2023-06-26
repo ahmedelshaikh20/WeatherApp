@@ -24,4 +24,16 @@ object RetrofitInstance {
       .create(WeatherApi::class.java)
 
   }
+
 }
+
+object RetrofitInstances {
+val geocodingApi : GeocodingApi by lazy {
+  Retrofit.Builder()
+    .baseUrl(BuildConfig.GECODING_URL)
+    .addConverterFactory(GsonConverterFactory.create())
+    .client(client)
+    .build()
+    .create(GeocodingApi::class.java)
+
+}}
