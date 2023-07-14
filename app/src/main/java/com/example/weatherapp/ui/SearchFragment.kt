@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,14 +15,14 @@ import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.databinding.FragmentSearchBinding
 import com.example.weatherapp.model.adapter.SearchListAdapter
 import com.example.weatherapp.viewmodel.searchListviewmodel
-
-
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
   lateinit var binding: FragmentSearchBinding
   lateinit var recyclerView: RecyclerView
-  lateinit var viewModel: searchListviewmodel
-  lateinit var weatherRepositry: WeatherRepositry
+  val  viewModel : searchListviewmodel by viewModels()
   lateinit var searchListAdapter: SearchListAdapter
 
   override fun onCreateView(
@@ -31,8 +32,6 @@ class SearchFragment : Fragment() {
     // Inflate the layout for this fragment
     binding = FragmentSearchBinding.inflate(inflater)
     recyclerView = binding.recyclerView
-    weatherRepositry = WeatherRepositry()
-    viewModel = searchListviewmodel(weatherRepositry)
     viewModel.suggestionList.observe(viewLifecycleOwner, Observer {
       searchListAdapter = SearchListAdapter(it , requireContext())
       val layoutManager = LinearLayoutManager(requireContext())

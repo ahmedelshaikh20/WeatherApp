@@ -14,11 +14,13 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
-class LocationService(val fusedLocationClient: FusedLocationProviderClient) {
+@Singleton
+class LocationService @Inject constructor(val fusedLocationClient: FusedLocationProviderClient) {
 
   @SuppressLint("MissingPermission")
   suspend fun getLastKnownLocation(): LatLng? {

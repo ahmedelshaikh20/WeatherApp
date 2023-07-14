@@ -129,7 +129,7 @@
         android:textStyle="bold"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toTopOf="parent" />
 
       <TextView
         android:id="@+id/descriptionlabel"

@@ -1,64 +1,43 @@
 package com.example.weatherapp.ui
 
-import android.annotation.SuppressLint
-import android.app.SearchManager
-import android.database.Cursor
-import android.database.MatrixCursor
 import android.os.Bundle
-import android.provider.BaseColumns
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
-import androidx.cursoradapter.widget.CursorAdapter
-import androidx.cursoradapter.widget.SimpleCursorAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.weatherapp.R
-import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.databinding.FragmentCurrentlocationBinding
-import com.example.weatherapp.locationservices.LocationService
-import com.example.weatherapp.model.adapter.SearchListAdapter
-import com.example.weatherapp.model.geocodingmodel.Result
 import com.example.weatherapp.utils.checkFineLocation
 import com.example.weatherapp.utils.checkLocationPermission
-import com.example.weatherapp.viewmodel.SearchViewModelFactory
 import com.example.weatherapp.viewmodel.searchviewmodel
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class CurrentLocationFragment : Fragment() {
-  private lateinit var viewModel: searchviewmodel
   private lateinit var binding: FragmentCurrentlocationBinding
-  private lateinit var fusedLocationClient: FusedLocationProviderClient
-  private lateinit var weatherRepositry: WeatherRepositry
-private lateinit var searchView : SearchView
-private lateinit var locationService: LocationService
-
+  val viewModel: searchviewmodel by viewModels()
+//  lateinit var viewModel : searchviewmodel
+  private lateinit var searchView: SearchView
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-    locationService = LocationService(fusedLocationClient)
+
     binding = FragmentCurrentlocationBinding.inflate(inflater)
     searchView = binding.search
-    weatherRepositry = WeatherRepositry()
-    val viewModelFactory = SearchViewModelFactory(weatherRepositry , locationService)
-     viewModel = ViewModelProvider(this, viewModelFactory).get(searchviewmodel::class.java)
+
+
     viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
       binding.currentLocation.text = it
     })
@@ -67,10 +46,10 @@ private lateinit var locationService: LocationService
       binding.temperature.text = it
     })
     viewModel.currentHumidity.observe(viewLifecycleOwner, Observer {
-      binding.humidity.text = it+" %"
+      binding.humidity.text = it + " %"
     })
     viewModel.currentPressure.observe(viewLifecycleOwner, Observer {
-      binding.pressure.text = it+" hPa"
+      binding.pressure.text = it + " hPa"
     })
     viewModel.currenttimer.observe(viewLifecycleOwner, Observer {
       binding.time.text = it
@@ -80,45 +59,45 @@ private lateinit var locationService: LocationService
     })
 
 
-    viewModel.currentIcon.observe(viewLifecycleOwner , Observer {
-      val iconUrl = getString(R.string.baseIconUrl)+it+"@2x.png"
+    viewModel.currentIcon.observe(viewLifecycleOwner, Observer {
+      val iconUrl = getString(R.string.baseIconUrl) + it + "@2x.png"
 
       Glide.with(requireContext())
         .load(iconUrl)
-        .apply( RequestOptions().override(200, 200))
+        .apply(RequestOptions().override(200, 200))
         .into(binding.weatherIcon)
-        })
-    viewModel.isPermissionGranted.observe(viewLifecycleOwner , Observer {
+    })
+    viewModel.isPermissionGranted.observe(viewLifecycleOwner, Observer {
       viewModel.viewModelScope.launch {
-      viewModel.OnLocationGranted()}
+        viewModel.OnLocationGranted()
+      }
     })
 
-    viewModel.foucsOnSearch.observe(viewLifecycleOwner , Observer {
-      if (it ){
+    viewModel.foucsOnSearch.observe(viewLifecycleOwner, Observer {
+      if (it) {
         binding.search.requestFocus()
       }
     })
     binding.search.setOnSearchClickListener {
-Navigation.findNavController(this.requireView()).navigate(R.id.action_currentLocationFragment_to_searchFragment)
+      Navigation.findNavController(this.requireView())
+        .navigate(R.id.action_currentLocationFragment_to_searchFragment)
 
     }
-    val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
+    val requestPermission =
+      registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
 
-      Log.d("isPermissionGranted" , isPermissionGranted.toString())
-      if (isPermissionGranted)
-        viewModel.LocationIsGranted()
-      else
-        viewModel.OnLocationDismissed()
+        Log.d("isPermissionGranted", isPermissionGranted.toString())
+        if (isPermissionGranted)
+          viewModel.LocationIsGranted()
+        else
+          viewModel.OnLocationDismissed()
 
-    }
-    checkLocationPermission( requireActivity() ,requestPermission)
+      }
+    checkLocationPermission(requireActivity(), requestPermission)
 
     return binding.root
 
   }
-
-
-
 
 
   override fun onResume() {
@@ -127,10 +106,5 @@ Navigation.findNavController(this.requireView()).navigate(R.id.action_currentLoc
     super.onResume()
   }
 
-
-  //TO GET LAST KNOWN LOCATION 3 STEPS NEEDED
-  //1- Check if location permission granted or not.
-  //2- If not go and request it.
-  //3- If granted then get last known location (Lat and Long as its needed for open weather api).
 
 }

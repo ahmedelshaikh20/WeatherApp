@@ -1,15 +1,22 @@
 package com.example.weatherapp.api
 
 import com.example.weatherapp.BuildConfig
+import com.example.weatherapp.di.ApiModule
+import com.example.weatherapp.di.ApiModule_WeatherApiFactory
 import com.example.weatherapp.model.SuggestionDataItem
 import com.example.weatherapp.model.WeatherDataItem
+import dagger.Component
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class WeatherRepositry() {
+@Singleton
+class WeatherRepositry @Inject constructor(var geocodingApi : GeocodingApi , var weatherApi : WeatherApi) {
 
   suspend fun getWeatherByLocation(long: Double, lat: Double): WeatherDataItem? {
 
     val response =
-      RetrofitInstance.api.getCurrentWeather(long, lat, BuildConfig.API_KEY, "metric").body()
+     weatherApi.getCurrentWeather(long, lat, BuildConfig.API_KEY, "metric").body()
     val result = response?.let {
       WeatherDataItem(
         it.name,
@@ -28,7 +35,7 @@ class WeatherRepositry() {
 
   suspend fun getWeatherByLocation(location: String): List<SuggestionDataItem> {
 
-    val response = RetrofitInstances.geocodingApi.getAllLocationPrediction(
+    val response = geocodingApi.getAllLocationPrediction(
       location,
       apiKey = BuildConfig.GEOCDOING_API_KEY
     )

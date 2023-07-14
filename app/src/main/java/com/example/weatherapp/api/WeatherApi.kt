@@ -1,11 +1,12 @@
 package com.example.weatherapp.api
 
+import com.example.weatherapp.di.ApiModule
 import com.example.weatherapp.model.WeatherApiResponse
 import com.example.weatherapp.model.geocodingmodel.GeocodingApiResponse
+import dagger.Component
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-
 interface WeatherApi {
 
   @GET("weather")
@@ -17,7 +18,6 @@ interface WeatherApi {
   ): Response<WeatherApiResponse>
 
 }
-
 
 interface GeocodingApi {
 

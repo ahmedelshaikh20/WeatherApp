@@ -5,9 +5,12 @@ import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.model.SuggestionDataItem
 import com.example.weatherapp.model.WeatherDataItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class searchListviewmodel(val weatherRepository: WeatherRepositry) : ViewModel() {
+@HiltViewModel
+class searchListviewmodel @Inject constructor(val weatherRepository: WeatherRepositry) : ViewModel() {
 
   private var _geocodingResponse = MutableLiveData<List<SuggestionDataItem>>()
   val geocodingResponse: LiveData<List<SuggestionDataItem>>
