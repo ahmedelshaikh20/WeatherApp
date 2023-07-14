@@ -6,11 +6,15 @@ import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.locationservices.LocationService
 import com.example.weatherapp.model.WeatherDataItem
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class searchviewmodel(
+@HiltViewModel
+class searchviewmodel @Inject constructor(
   val weatherRepository: WeatherRepositry,
   val locationService: LocationService
 ) : ViewModel() {
