@@ -10,13 +10,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherapp.R
-import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.databinding.FragmentSearchBinding
 import com.example.weatherapp.model.adapter.SearchListAdapter
 import com.example.weatherapp.viewmodel.searchListviewmodel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
@@ -33,7 +31,7 @@ class SearchFragment : Fragment() {
     binding = FragmentSearchBinding.inflate(inflater)
     recyclerView = binding.recyclerView
     viewModel.suggestionList.observe(viewLifecycleOwner, Observer {
-      searchListAdapter = SearchListAdapter(it , requireContext())
+      searchListAdapter = SearchListAdapter(it, requireContext())
       val layoutManager = LinearLayoutManager(requireContext())
       recyclerView.layoutManager = layoutManager
       recyclerView.adapter = searchListAdapter

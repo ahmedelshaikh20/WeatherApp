@@ -111,6 +111,11 @@ class searchviewmodel @Inject constructor(
 
   }
 
+    fun citySelected(selectedCity: WeatherDataItem) {
+        _weatherResponse.value = selectedCity
+      updateData()
+    }
+
 
 }
 

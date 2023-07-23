@@ -1,12 +1,15 @@
 package com.example.weatherapp.model.adapter
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -14,8 +17,13 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.SuggestionItemLayoutBinding
 import com.example.weatherapp.model.WeatherApiResponse
 import com.example.weatherapp.model.WeatherDataItem
+import com.example.weatherapp.ui.CurrentLocationFragmentDirections
+import com.example.weatherapp.ui.SearchFragmentDirections
 
-class SearchListAdapter(val res: List<WeatherDataItem>, val context: Context) :
+class SearchListAdapter(
+  val res: List<WeatherDataItem>,
+  val context: Context
+) :
   RecyclerView.Adapter<SearchListAdapter.ResultViewHolder>() {
   class ResultViewHolder(itemBinding: SuggestionItemLayoutBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
@@ -53,6 +61,13 @@ class SearchListAdapter(val res: List<WeatherDataItem>, val context: Context) :
       .load(iconUrl)
       .apply(RequestOptions().override(200, 200))
       .into(holder.imageView)
+
+
+    holder.itemView.setOnClickListener {
+      val directions =
+        SearchFragmentDirections.actionSearchFragmentToCurrentLocationFragment(resultItem)
+      Navigation.findNavController(it).navigate(directions)
+    }
   }
 
 

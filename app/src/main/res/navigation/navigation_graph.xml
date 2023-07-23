@@ -9,7 +9,20 @@
     android:id="@+id/searchFragment"
     android:name="com.example.weatherapp.ui.SearchFragment"
     android:label="fragment_search"
-    tools:layout="@layout/fragment_search" />
+    tools:layout="@layout/fragment_search" >
+
+      <action
+        android:id="@+id/action_searchFragment_to_currentLocationFragment"
+        app:destination="@id/currentLocationFragment" >
+        <argument
+          android:name="selectedCity"
+          app:argType="com.example.weatherapp.model.WeatherDataItem"
+          app:nullable="true"
+          android:defaultValue="@null" />
+      </action>
+
+
+  </fragment>
   <fragment
     android:id="@+id/currentLocationFragment"
     android:name="com.example.weatherapp.ui.CurrentLocationFragment"
@@ -17,5 +30,10 @@
     <action
       android:id="@+id/action_currentLocationFragment_to_searchFragment"
       app:destination="@id/searchFragment" />
+    <argument
+      android:name="selectedCity"
+      app:argType="com.example.weatherapp.model.WeatherDataItem"
+      app:nullable="true"
+      android:defaultValue="@null" />
   </fragment>
 </navigation>

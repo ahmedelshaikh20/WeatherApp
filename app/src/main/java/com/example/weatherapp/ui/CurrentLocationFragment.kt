@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.weatherapp.R
@@ -26,7 +27,8 @@ import kotlinx.coroutines.launch
 class CurrentLocationFragment : Fragment() {
   private lateinit var binding: FragmentCurrentlocationBinding
   val viewModel: searchviewmodel by viewModels()
-//  lateinit var viewModel : searchviewmodel
+
+  //  lateinit var viewModel : searchviewmodel
   private lateinit var searchView: SearchView
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -36,7 +38,6 @@ class CurrentLocationFragment : Fragment() {
 
     binding = FragmentCurrentlocationBinding.inflate(inflater)
     searchView = binding.search
-
 
     viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
       binding.currentLocation.text = it
@@ -83,26 +84,34 @@ class CurrentLocationFragment : Fragment() {
         .navigate(R.id.action_currentLocationFragment_to_searchFragment)
 
     }
-    val requestPermission =
-      registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
+    val bundle = arguments
+    val args = bundle?.let { CurrentLocationFragmentArgs.fromBundle(it) }
+    Log.d("Selected City", args?.selectedCity.toString())
 
-        Log.d("isPermissionGranted", isPermissionGranted.toString())
-        if (isPermissionGranted)
-          viewModel.LocationIsGranted()
-        else
-          viewModel.OnLocationDismissed()
+    if (args?.selectedCity != null) {
+      viewModel.citySelected(args.selectedCity!!)
+    } else {
+      val requestPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
 
-      }
-    checkLocationPermission(requireActivity(), requestPermission)
+          Log.d("isPermissionGranted", isPermissionGranted.toString())
+          if (isPermissionGranted)
+            viewModel.LocationIsGranted()
+          else
+            viewModel.OnLocationDismissed()
 
+        }
+
+      checkLocationPermission(requireActivity(), requestPermission)
+    }
     return binding.root
 
   }
 
-
   override fun onResume() {
-    if (checkFineLocation(requireActivity()))
-      viewModel.LocationIsGranted()
+
+//    if (checkFineLocation(requireActivity()))
+//      viewModel.LocationIsGranted()
     super.onResume()
   }
 
