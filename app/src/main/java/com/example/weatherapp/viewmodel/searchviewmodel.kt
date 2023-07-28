@@ -61,6 +61,9 @@ class searchviewmodel @Inject constructor(
   val foucsOnSearch: LiveData<Boolean>
     get() = _foucsOnSearch
 
+  private var _apiRequestDone = MutableLiveData<Boolean>()
+  val apiRequestDone: LiveData<Boolean>
+    get() = _apiRequestDone
   init {
     _currentLocation.value = "Cairo"
   }
@@ -88,6 +91,7 @@ class searchviewmodel @Inject constructor(
       weatherRepository.getWeatherByLocation(latLng.latitude, latLng.longitude)
     updateData()
 
+
   }
 
 
@@ -99,6 +103,7 @@ class searchviewmodel @Inject constructor(
     _currentPressure.value = weatherResponse.value?.pressure.toString()
     _currenttime.value = getDate(weatherResponse.value?.time!!)
     _currentIcon.value = weatherResponse.value?.icon.toString()
+    _apiRequestDone.value = true
   }
 
 

@@ -84,13 +84,7 @@ class CurrentLocationFragment : Fragment() {
         .navigate(R.id.action_currentLocationFragment_to_searchFragment)
 
     }
-    val bundle = arguments
-    val args = bundle?.let { CurrentLocationFragmentArgs.fromBundle(it) }
-    Log.d("Selected City", args?.selectedCity.toString())
 
-    if (args?.selectedCity != null) {
-      viewModel.citySelected(args.selectedCity!!)
-    } else {
       val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
 
@@ -103,15 +97,21 @@ class CurrentLocationFragment : Fragment() {
         }
 
       checkLocationPermission(requireActivity(), requestPermission)
-    }
+
     return binding.root
 
   }
 
   override fun onResume() {
+    val bundle = arguments
+    val args = bundle?.let { CurrentLocationFragmentArgs.fromBundle(it) }
+    Log.d("Selected City", args?.selectedCity.toString())
 
-//    if (checkFineLocation(requireActivity()))
-//      viewModel.LocationIsGranted()
+    if (args?.selectedCity != null) {
+      viewModel.citySelected(args.selectedCity!!)
+    } else{
+    if (checkFineLocation(requireActivity()))
+      viewModel.LocationIsGranted()}
     super.onResume()
   }
 
