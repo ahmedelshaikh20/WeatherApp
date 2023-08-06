@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
   <color name="TinyWhite">#FDFCFC</color>
   <color name="editableTexts">#9A9A9A</color>
+  <color name="splashbackground">#89CFF0</color>
 </resources>

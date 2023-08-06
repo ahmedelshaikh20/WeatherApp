@@ -5,40 +5,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentCurrentlocationBinding
 import com.example.weatherapp.utils.checkFineLocation
-import com.example.weatherapp.utils.checkLocationPermission
 import com.example.weatherapp.viewmodel.searchviewmodel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CurrentLocationFragment : Fragment() {
   private lateinit var binding: FragmentCurrentlocationBinding
-  val viewModel: searchviewmodel by viewModels()
-
-  //  lateinit var viewModel : searchviewmodel
+  lateinit var viewModel: searchviewmodel
   private lateinit var searchView: SearchView
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-
+    viewModel = ViewModelProvider(requireActivity()).get(searchviewmodel::class.java)
     binding = FragmentCurrentlocationBinding.inflate(inflater)
     searchView = binding.search
-
     viewModel.currentLocation.observe(viewLifecycleOwner, Observer {
       binding.currentLocation.text = it
     })
@@ -68,35 +60,16 @@ class CurrentLocationFragment : Fragment() {
         .apply(RequestOptions().override(200, 200))
         .into(binding.weatherIcon)
     })
-    viewModel.isPermissionGranted.observe(viewLifecycleOwner, Observer {
-      viewModel.viewModelScope.launch {
-        viewModel.OnLocationGranted()
-      }
-    })
 
-    viewModel.foucsOnSearch.observe(viewLifecycleOwner, Observer {
-      if (it) {
-        binding.search.requestFocus()
-      }
-    })
+
+
     binding.search.setOnSearchClickListener {
       Navigation.findNavController(this.requireView())
         .navigate(R.id.action_currentLocationFragment_to_searchFragment)
 
     }
 
-      val requestPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted: Boolean ->
 
-          Log.d("isPermissionGranted", isPermissionGranted.toString())
-          if (isPermissionGranted)
-            viewModel.LocationIsGranted()
-          else
-            viewModel.OnLocationDismissed()
-
-        }
-
-      checkLocationPermission(requireActivity(), requestPermission)
 
     return binding.root
 
@@ -109,9 +82,10 @@ class CurrentLocationFragment : Fragment() {
 
     if (args?.selectedCity != null) {
       viewModel.citySelected(args.selectedCity!!)
-    } else{
-    if (checkFineLocation(requireActivity()))
-      viewModel.LocationIsGranted()}
+    } else {
+      if (checkFineLocation(requireActivity()))
+        viewModel.LocationIsGranted()
+    }
     super.onResume()
   }
 

@@ -37,9 +37,12 @@ class SearchFragment : Fragment() {
       recyclerView.adapter = searchListAdapter
       searchListAdapter.notifyDataSetChanged()
     })
-    binding.searhView.requestFocus()
     getTextinSearchView()
     return binding.root
+  }
+
+  override fun onStart() {
+    super.onStart()
   }
 
   private fun getTextinSearchView() {
