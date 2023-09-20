@@ -12,6 +12,10 @@ import androidx.navigation.Navigation
 import com.example.weatherapp.utils.checkFineLocation
 import com.example.weatherapp.utils.checkLocationPermission
 import com.example.weatherapp.viewmodel.searchviewmodel
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -24,3 +28,5 @@ class MainActivity : AppCompatActivity() {
 
   }
 }
+
+

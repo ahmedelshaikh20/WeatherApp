@@ -19,10 +19,13 @@ import com.example.weatherapp.model.WeatherApiResponse
 import com.example.weatherapp.model.WeatherDataItem
 import com.example.weatherapp.ui.CurrentLocationFragmentDirections
 import com.example.weatherapp.ui.SearchFragmentDirections
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 
 class SearchListAdapter(
   val res: List<WeatherDataItem>,
-  val context: Context
+  val context: Context,
+  val firebaseAnalytics: FirebaseAnalytics
 ) :
   RecyclerView.Adapter<SearchListAdapter.ResultViewHolder>() {
   class ResultViewHolder(itemBinding: SuggestionItemLayoutBinding) :
@@ -67,6 +70,12 @@ class SearchListAdapter(
       val directions =
         SearchFragmentDirections.actionSearchFragmentToCurrentLocationFragment(resultItem)
       Navigation.findNavController(it).navigate(directions)
+
+      firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+      param("Item_name" , resultItem.name)
+        param("Item_country" , resultItem.country)
+
+      }
     }
   }
 

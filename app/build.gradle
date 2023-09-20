@@ -5,7 +5,7 @@ plugins {
   id'com.google.dagger.hilt.android'
   id'androidx.navigation.safeargs.kotlin'
   id 'kotlin-parcelize'
-
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -89,4 +89,7 @@ dependencies {
 
   implementation("androidx.fragment:fragment-ktx:1.6.0")
 
+  // Firebase
+  implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+  implementation("com.google.firebase:firebase-analytics-ktx")
 }

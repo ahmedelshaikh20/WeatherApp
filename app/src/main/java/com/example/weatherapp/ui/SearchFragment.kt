@@ -13,11 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.FragmentSearchBinding
 import com.example.weatherapp.model.adapter.SearchListAdapter
 import com.example.weatherapp.viewmodel.searchListviewmodel
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
-
+  @Inject
+  lateinit var firebaseAnalytics: FirebaseAnalytics
   lateinit var binding: FragmentSearchBinding
   lateinit var recyclerView: RecyclerView
   val  viewModel : searchListviewmodel by viewModels()
@@ -31,7 +37,7 @@ class SearchFragment : Fragment() {
     binding = FragmentSearchBinding.inflate(inflater)
     recyclerView = binding.recyclerView
     viewModel.suggestionList.observe(viewLifecycleOwner, Observer {
-      searchListAdapter = SearchListAdapter(it, requireContext())
+      searchListAdapter = SearchListAdapter(it, requireContext() , firebaseAnalytics)
       val layoutManager = LinearLayoutManager(requireContext())
       recyclerView.layoutManager = layoutManager
       recyclerView.adapter = searchListAdapter
@@ -41,9 +47,7 @@ class SearchFragment : Fragment() {
     return binding.root
   }
 
-  override fun onStart() {
-    super.onStart()
-  }
+
 
   private fun getTextinSearchView() {
     binding.searhView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -55,6 +59,10 @@ class SearchFragment : Fragment() {
 
         if (newText != null) {
           if (newText.length > 2) {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH) {
+              param(FirebaseAnalytics.Param.ITEM_NAME , newText)
+
+            }
             viewModel.searchTextChanged(newText)
           }
         }
