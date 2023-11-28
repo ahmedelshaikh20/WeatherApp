@@ -36,13 +36,13 @@ class SearchFragment : Fragment() {
     // Inflate the layout for this fragment
     binding = FragmentSearchBinding.inflate(inflater)
     recyclerView = binding.recyclerView
-    viewModel.suggestionList.observe(viewLifecycleOwner, Observer {
-      searchListAdapter = SearchListAdapter(it, requireContext() , firebaseAnalytics)
-      val layoutManager = LinearLayoutManager(requireContext())
-      recyclerView.layoutManager = layoutManager
-      recyclerView.adapter = searchListAdapter
-      searchListAdapter.notifyDataSetChanged()
-    })
+//    viewModel.suggestionList.observe(viewLifecycleOwner, Observer {
+//      searchListAdapter = SearchListAdapter(it, requireContext() , firebaseAnalytics)
+//      val layoutManager = LinearLayoutManager(requireContext())
+//      recyclerView.layoutManager = layoutManager
+//      recyclerView.adapter = searchListAdapter
+//      searchListAdapter.notifyDataSetChanged()
+//    })
     getTextinSearchView()
     return binding.root
   }

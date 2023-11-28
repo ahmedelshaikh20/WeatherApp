@@ -1,11 +1,11 @@
 package com.example.weatherapp.model
 
 data class SuggestionDataItem(
-  var city :String? ,
-  var country :String,
-  var countryCode : String,
-  var state : String?,
-  var formattedAddress : String,
-  var latitude : Double,
-  val longitude : Double
+  var city :String? =null ,
+  var country :String? = null,
+  var countryCode : String? =null,
+  var state : String? =null,
+  var formattedAddress : String? =null,
+  var latitude : Double?=null,
+  val longitude : Double?=null
 )

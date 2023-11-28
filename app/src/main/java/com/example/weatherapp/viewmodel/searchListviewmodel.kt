@@ -6,19 +6,20 @@ import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.model.SuggestionDataItem
 import com.example.weatherapp.model.WeatherDataItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class searchListviewmodel @Inject constructor(val weatherRepository: WeatherRepositry) : ViewModel() {
 
-  private var _geocodingResponse = MutableLiveData<List<SuggestionDataItem>>()
-  val geocodingResponse: LiveData<List<SuggestionDataItem>>
-    get() = _geocodingResponse
+  private var _geocodingResponse = MutableStateFlow(listOf(SuggestionDataItem()))
+  val geocodingResponse = _geocodingResponse.asStateFlow()
 
-  private var _suggestionList = MutableLiveData<List<WeatherDataItem>>()
-  val suggestionList: LiveData<List<WeatherDataItem>>
-    get() = _suggestionList
+  private var _suggestionList = MutableStateFlow(listOf(WeatherDataItem()))
+  val suggestionList = _suggestionList.asStateFlow()
 
 
   fun searchTextChanged(searchQuery: String) {
@@ -31,7 +32,7 @@ class searchListviewmodel @Inject constructor(val weatherRepository: WeatherRepo
             it.city + "," + it.countryCode
           )
         ) {
-          suggestionList.add(it.formattedAddress)
+          it.formattedAddress?.let { it1 -> suggestionList.add(it1) }
           if (it.city == null)
             countriesFound.add(it.state + "," + it.countryCode)
           else
@@ -49,7 +50,11 @@ class searchListviewmodel @Inject constructor(val weatherRepository: WeatherRepo
     val res = ArrayList<WeatherDataItem>()
     geocodingResponse.value?.forEach {
       viewModelScope.launch {
-        val itemRes = weatherRepository.getWeatherByLocation(it.latitude, it.longitude)
+        val itemRes = it.latitude?.let { it1 -> it.longitude?.let { it2 ->
+          weatherRepository.getWeatherByLocation(it1,
+            it2
+          )
+        } }
         itemRes?.let { it1 -> res.add(it1) }
         _suggestionList.value = res.toList()
 
@@ -76,6 +81,12 @@ class searchListviewmodel @Inject constructor(val weatherRepository: WeatherRepo
       }
     }
     return newResponse.toList()
+  }
+
+  fun EmptySuggestionList() {
+    _suggestionList.update {
+      listOf()
+    }
   }
 
 }

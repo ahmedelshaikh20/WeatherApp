@@ -54,9 +54,9 @@ class SearchListAdapter(
     val resultItem = res[position]
 
     if (resultItem.name != null) {
-      holder.city.text = resultItem.name + "," + resultItem.country.capitalize()
+//      holder.city.text = resultItem.name + "," + resultItem.country.capitalize()
     } else
-      holder.city.text = resultItem.name + "," + resultItem.country.capitalize()
+//      holder.city.text = resultItem.name + "," + resultItem.country.capitalize()
     holder.temprature.text = resultItem.temperature.toString()
     val currentIcon = resultItem.icon
     val iconUrl = holder.iconUrl + currentIcon + "@2x.png"
@@ -73,7 +73,7 @@ class SearchListAdapter(
 
       firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
       param("Item_name" , resultItem.name)
-        param("Item_country" , resultItem.country)
+//        param("Item_country" , resultItem.country)
 
       }
     }
