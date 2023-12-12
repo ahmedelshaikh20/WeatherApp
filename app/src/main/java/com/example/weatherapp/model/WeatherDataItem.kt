@@ -5,13 +5,13 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class WeatherDataItem(
-  var name: String = "NewYork",
-  var country : String? = "US",
-  var description: String = "Sunny",
-  var temperature: Double = 13.0,
-  var humidity: Int =10,
-  var pressure: Int =10,
+  var name: String?,
+  var country : String? ,
+  var description: String?,
+  var temperature: Double?,
+  var humidity: Int? ,
+  var pressure: Int?,
   var icon: String?=null,
-  var time : Long=10
+  var time : Long?
 
 ):Parcelable
