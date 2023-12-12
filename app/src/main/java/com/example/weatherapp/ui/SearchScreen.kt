@@ -14,12 +14,24 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -32,18 +44,38 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.weatherapp.R
-import com.example.weatherapp.viewmodel.searchListviewmodel
+import com.example.weatherapp.navigation.Screen
+import com.example.weatherapp.viewmodel.SearchListViewModel
 
 
 @Composable
-fun SearchScreen(navController: NavHostController, searchListviewmodel: searchListviewmodel) {
+fun SearchScreen(
+  navController: NavHostController,
+  query: String?,
+  searchListViewModel: SearchListViewModel
+) {
 
-  val suggestionList by searchListviewmodel.suggestionList.collectAsState()
+  LaunchedEffect(key1 = query) {
+    if (query != null && query != "") {
+      searchListViewModel.searchTextChanged(query)
+
+    }
+
+  }
+  val suggestionList by searchListViewModel.suggestionList.collectAsState()
   Column(modifier = Modifier.fillMaxSize()) {
-    searhBar(navController, screen = "searchScreen", searchListviewmodel)
+    query?.let {
+      searchBar(
+        navController,
+        query = it,
+        screen = "searchScreen",
+        searchListViewModel = searchListViewModel
+      )
+    }
     Spacer(modifier = Modifier.size(20.dp))
     LazyColumn(
       modifier = Modifier
@@ -91,7 +123,8 @@ fun CityInfoContainer(
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
       Column(
         modifier = Modifier
-          .padding(start = 10.dp, top = 10.dp).weight(1f),
+          .padding(start = 10.dp, top = 10.dp)
+          .weight(1f),
         verticalArrangement = Arrangement.SpaceAround
       ) {
         Text(
@@ -138,3 +171,77 @@ fun CityInfoContainer(
 
 
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun searchBar(
+  navController: NavController, screen: String,
+  query: String = "",
+  searchListViewModel: SearchListViewModel? = null,
+  modifier: Modifier = Modifier
+) {
+  val context = LocalContext.current
+  var query by remember {
+    mutableStateOf(query)
+  }
+
+  var isActive by remember {
+    mutableStateOf(false)
+  }
+  SearchBar(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(top = 45.dp, start = 10.dp, end = 10.dp)
+      .clip(RoundedCornerShape(10.dp)),
+
+    query = query,
+    onQueryChange = { newQuery ->
+      query = newQuery
+      if (screen == "searchScreen") {
+        if (query.length > 2) {
+          searchListViewModel?.searchTextChanged(newQuery)
+        } else if (query.length == 0) {
+          searchListViewModel?.EmptySuggestionList()
+        }
+      }
+    },
+    onSearch = {
+      if (screen != "searchScreen") {
+        if (query.length > 2)
+          navController.navigate(Screen.SearchScreen.withArgs(query + ""))
+        else
+          simpleToastMessage(context = context, query = query, error = true)
+      }
+    },
+    active = false,
+    onActiveChange = { activeChange ->
+      isActive = activeChange
+
+    },
+    shape = SearchBarDefaults.inputFieldShape,
+    colors = SearchBarDefaults.colors(containerColor = colorResource(id = R.color.ContainerColor)),
+    trailingIcon = {
+      Icon(
+        imageVector = Icons.Default.Search,
+        contentDescription = "SearchIcon",
+        tint = Color.Gray,
+        modifier = Modifier.size(30.dp)
+      )
+    },
+    placeholder = {
+      Text(
+        text = "Search Location",
+        modifier = Modifier
+          .fillMaxWidth()
+          .size(30.dp),
+        color = colorResource(id = R.color.SearchHintColor)
+      )
+    },
+    tonalElevation = 0.dp
+
+
+  ) {
+
+  }
+}
+
