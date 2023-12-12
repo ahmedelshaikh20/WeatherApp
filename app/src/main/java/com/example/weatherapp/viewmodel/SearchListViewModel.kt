@@ -7,6 +7,8 @@ import com.example.weatherapp.model.WeatherDataItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,29 +24,38 @@ class SearchListViewModel @Inject constructor(
   private var _suggestionList = MutableStateFlow(listOf<WeatherDataItem>())
   val suggestionList = _suggestionList.asStateFlow()
 
+  private var _searchQuery = MutableStateFlow("")
+  val searchQuery = _searchQuery.asStateFlow()
 
-  fun searchTextChanged(searchQuery: String) {
+
+  fun searchTextChanged() {
     viewModelScope.launch {
       val suggestionList = ArrayList<String>()
       val countriesFound = ArrayList<String>()
-      var results = weatherRepository.getWeatherByLocation(searchQuery)
-      results?.forEach {
-        if (!countriesFound.contains(it.state + "," + it.countryCode) && !countriesFound.contains(
-            it.city + "," + it.countryCode
-          )
-        ) {
-          it.formattedAddress?.let { it1 -> suggestionList.add(it1) }
-          if (it.city == null)
-            countriesFound.add(it.state + "," + it.countryCode)
-          else
-            countriesFound.add(it.city + "," + it.countryCode)
+      searchQuery.debounce(2000).collectLatest {
+        var results = weatherRepository.getWeatherByLocation(it)
+        results?.forEach {
+          if (!countriesFound.contains(it.state + "," + it.countryCode) && !countriesFound.contains(
+              it.city + "," + it.countryCode
+            )
+          ) {
+            it.formattedAddress?.let { it1 -> suggestionList.add(it1) }
+            if (it.city == null)
+              countriesFound.add(it.state + "," + it.countryCode)
+            else
+              countriesFound.add(it.city + "," + it.countryCode)
+          }
         }
+        results = deleteRedundancy(results, countriesFound)
+        _geocodingResponse.value = results
+        updateSuggestionList()
       }
-      results = deleteRedundancy(results, countriesFound)
-      _geocodingResponse.value = results
-      updateSuggestionList()
-
     }
+  }
+
+  fun updateSearchQuery(searchQuery: String) {
+    _searchQuery.value = searchQuery
+    searchTextChanged()
   }
 
   private fun updateSuggestionList() {

@@ -58,15 +58,15 @@ fun SearchScreen(
   query: String?,
   searchListViewModel: SearchListViewModel
 ) {
+  val suggestionList by searchListViewModel.suggestionList.collectAsState()
 
   LaunchedEffect(key1 = query) {
     if (query != null && query != "") {
-      searchListViewModel.searchTextChanged(query)
-
+      searchListViewModel.updateSearchQuery(query)
     }
-
   }
-  val suggestionList by searchListViewModel.suggestionList.collectAsState()
+
+
   Column(modifier = Modifier.fillMaxSize()) {
     query?.let {
       searchBar(
@@ -199,7 +199,7 @@ fun searchBar(
       query = newQuery
       if (screen == "searchScreen") {
         if (query.length > 2) {
-          searchListViewModel?.searchTextChanged(newQuery)
+          searchListViewModel?.updateSearchQuery(newQuery)
         } else if (query.length == 0) {
           searchListViewModel?.EmptySuggestionList()
         }
