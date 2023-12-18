@@ -69,11 +69,11 @@ fun SearchScreen(
 
   Column(modifier = Modifier.fillMaxSize()) {
     query?.let {
-      searchBar(
-        navController,
-        query = it,
-        screen = "searchScreen",
-        searchListViewModel = searchListViewModel
+      SearchBar(
+          navController,
+          query = it,
+          screen = "searchScreen",
+          searchListViewModel = searchListViewModel
       )
     }
     Spacer(modifier = Modifier.size(20.dp))
@@ -174,7 +174,7 @@ fun CityInfoContainer(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun searchBar(
+fun SearchBar(
   navController: NavController, screen: String,
   query: String = "",
   searchListViewModel: SearchListViewModel? = null,

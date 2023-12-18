@@ -60,7 +60,7 @@ fun HomeScreen(
   Column(
     horizontalAlignment = CenterHorizontally
   ) {
-    searchBar(navController, screen = "Home Screen")
+    SearchBar(navController, screen = "Home Screen")
     WeatherImage(
       weatherResponse?.icon, modifier = Modifier
         .size(200.dp)

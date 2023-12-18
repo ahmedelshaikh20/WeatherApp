@@ -1,5 +1,6 @@
 package com.example.weatherapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.model.SuggestionDataItem
@@ -32,34 +33,47 @@ class SearchListViewModel @Inject constructor(
     viewModelScope.launch {
       val suggestionList = ArrayList<String>()
       val countriesFound = ArrayList<String>()
-      searchQuery.debounce(2000).collectLatest {
-        var results = weatherRepository.getWeatherByLocation(it)
-        results?.forEach {
-          if (!countriesFound.contains(it.state + "," + it.countryCode) && !countriesFound.contains(
-              it.city + "," + it.countryCode
-            )
-          ) {
-            it.formattedAddress?.let { it1 -> suggestionList.add(it1) }
-            if (it.city == null)
-              countriesFound.add(it.state + "," + it.countryCode)
-            else
-              countriesFound.add(it.city + "," + it.countryCode)
-          }
+      var results = weatherRepository.getWeatherByLocation(searchQuery.value)
+      results?.forEach {
+        if (!countriesFound.contains(it.state + "," + it.countryCode) && !countriesFound.contains(
+            it.city + "," + it.countryCode
+          )
+        ) {
+          it.formattedAddress?.let { it1 -> suggestionList.add(it1) }
+          if (it.city == null)
+            countriesFound.add(it.state + "," + it.countryCode)
+          else
+            countriesFound.add(it.city + "," + it.countryCode)
         }
-        results = deleteRedundancy(results, countriesFound)
-        _geocodingResponse.value = results
-        updateSuggestionList()
+      }
+
+      results = deleteRedundancy(results, countriesFound)
+      _geocodingResponse.value = results
+      updateSuggestionList()
+    }
+
+  }
+
+
+  init {
+    viewModelScope.launch {
+      searchQuery.debounce(500).collectLatest {
+        searchTextChanged()
       }
     }
+
   }
 
   fun updateSearchQuery(searchQuery: String) {
     _searchQuery.value = searchQuery
-    searchTextChanged()
   }
 
   private fun updateSuggestionList() {
     val res = ArrayList<WeatherDataItem>()
+    if (geocodingResponse.value.isEmpty()){
+      _suggestionList.value= emptyList()
+    }
+    else {
     geocodingResponse.value?.forEach {
       viewModelScope.launch {
         val itemRes = it.latitude?.let { it1 ->
@@ -75,7 +89,7 @@ class SearchListViewModel @Inject constructor(
 
       }
 
-    }
+    }}
 
   }
 
