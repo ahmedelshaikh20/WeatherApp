@@ -3,8 +3,10 @@ package com.example.weatherapp.ui
 import android.Manifest
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asAndroidColorFilter
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
@@ -60,8 +63,8 @@ fun SplashScreen(navController: NavController, searchViewModel: SearchViewModel)
       .fillMaxSize()
       .background(colorResource(id = R.color.splashbackground))
   ) {
-    AppImage(
-      resource = R.drawable.splash_background, modifier = Modifier
+    Image(
+      painter = painterResource(id =R.drawable.appicon),contentDescription = "Splash Screen Image", modifier = Modifier
         .size(100.dp)
         .align(
           Alignment.Center
@@ -72,24 +75,4 @@ fun SplashScreen(navController: NavController, searchViewModel: SearchViewModel)
 
 
 
-@Composable
-fun AppImage(
-  modifier: Modifier = Modifier,
-  @DrawableRes resource: Int,
-  colorFilter: ColorFilter? = null
-) {
-  AndroidView(
-    modifier = modifier,
-    factory = { context ->
-      ImageView(context).apply {
-        setImageResource(resource)
-        setColorFilter(colorFilter?.asAndroidColorFilter())
-      }
-    },
-    update = {
-      it.setImageResource(resource)
-      it.colorFilter = colorFilter?.asAndroidColorFilter()
-    }
-  )
-}
 
