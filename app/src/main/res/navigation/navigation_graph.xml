@@ -3,26 +3,13 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/navigation_graph"
-  app:startDestination="@id/splashFragment">
+  app:startDestination="@id/currentLocationFragment">
 
   <fragment
     android:id="@+id/searchFragment"
     android:name="com.example.weatherapp.ui.SearchFragment"
     android:label="fragment_search"
-    tools:layout="@layout/fragment_search" >
-
-      <action
-        android:id="@+id/action_searchFragment_to_currentLocationFragment"
-        app:destination="@id/currentLocationFragment" >
-        <argument
-          android:name="selectedCity"
-          app:argType="com.example.weatherapp.model.WeatherDataItem"
-          app:nullable="true"
-          android:defaultValue="@null" />
-      </action>
-
-
-  </fragment>
+    tools:layout="@layout/fragment_search" />
   <fragment
     android:id="@+id/currentLocationFragment"
     android:name="com.example.weatherapp.ui.CurrentLocationFragment"
@@ -30,18 +17,5 @@
     <action
       android:id="@+id/action_currentLocationFragment_to_searchFragment"
       app:destination="@id/searchFragment" />
-    <argument
-      android:name="selectedCity"
-      app:argType="com.example.weatherapp.model.WeatherDataItem"
-      app:nullable="true"
-      android:defaultValue="@null" />
-  </fragment>
-  <fragment
-    android:id="@+id/splashFragment"
-    android:name="com.example.weatherapp.ui.SplashFragment"
-    android:label="SplashFragment" >
-    <action
-      android:id="@+id/action_splashFragment_to_currentLocationFragment"
-      app:destination="@id/currentLocationFragment" />
   </fragment>
 </navigation>

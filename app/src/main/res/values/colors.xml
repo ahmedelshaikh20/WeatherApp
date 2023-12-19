@@ -9,10 +9,4 @@
     <color name="white">#FFFFFFFF</color>
   <color name="TinyWhite">#FDFCFC</color>
   <color name="editableTexts">#9A9A9A</color>
-  <color name="splashbackground">#89CFF0</color>
-  <color name="SearchHintColor">#C4C4C4</color>
-  <color name="ContainerColor">#F8F8F8</color>
-  <color name="WeatherInfoColor">#C4C4C4</color>
-  <color name="WeatherInfoContainerBackground">#FDFCFC</color>
-  <color name="DataColor">#9A9A9A</color>
 </resources>
