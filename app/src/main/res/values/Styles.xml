@@ -43,9 +43,4 @@
     <item name="cornerSizeBottomLeft">12dp</item>
   </style>
 
-
-  <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-    <item name="android:windowBackground">@drawable/splash_background</item>
-  </style>
-
 </resources>
