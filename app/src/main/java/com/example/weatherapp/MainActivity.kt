@@ -1,12 +1,33 @@
 package com.example.weatherapp
 
-import androidx.appcompat.app.AppCompatActivity
+
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import com.example.weatherapp.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+class MainActivity : ComponentActivity() {
+
+  @SuppressLint("SuspiciousIndentation")
+  @RequiresApi(Build.VERSION_CODES.M)
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    setContent {
+      Navigation()
     }
+    super.onCreate(savedInstanceState)
+  }
+
+
 }
+
+
+
+
+
+
