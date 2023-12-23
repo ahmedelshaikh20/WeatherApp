@@ -29,6 +29,8 @@ android {
       buildConfigField 'String', 'BASE_URL', "${BASE_URL}"
       buildConfigField 'String', 'GECODING_URL', "${GEOCODING_URL}"
       buildConfigField 'String', 'GEOCDOING_API_KEY', "${GEOCDOING_API_KEY}"
+      buildConfigField 'String', 'GEMINI_API_KEY', "${GEMINI_API_KEY}"
+
 
     }
     release {
@@ -37,6 +39,7 @@ android {
       buildConfigField 'String', 'BASE_URL', "${BASE_URL}"
       buildConfigField 'String', 'GECODING_URL', "${GEOCODING_URL}"
       buildConfigField 'String', 'GEOCDOING_API_KEY', "${GEOCDOING_API_KEY}"
+      buildConfigField 'String', 'GEMINI_API_KEY', "${GEMINI_API_KEY}"
 
 
       minifyEnabled false
@@ -99,5 +102,6 @@ dependencies {
   implementation(libs.androidx.material3)
   implementation(libs.accompanist.permissions)
   implementation(libs.coil.compose)
+  implementation(libs.generativeai)
 
 }

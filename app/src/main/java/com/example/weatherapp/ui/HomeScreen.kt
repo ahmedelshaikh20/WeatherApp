@@ -4,6 +4,9 @@ package com.example.weatherapp.ui
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,11 +60,13 @@ val firSansFamily = FontFamily(
 @Composable
 fun HomeScreen(
   navController: NavController,
-  searchViewmodel: SearchViewModel,
+  searchViewModel: SearchViewModel,
 ) {
-  val weatherResponse by searchViewmodel.weatherResponse.collectAsState()
+  val weatherResponse by searchViewModel.weatherResponse.collectAsState()
+  val outfit by searchViewModel.recommendedOutfit.collectAsState()
   Column(
-    horizontalAlignment = CenterHorizontally
+    horizontalAlignment = CenterHorizontally,
+    modifier = Modifier.verticalScroll(rememberScrollState())
   ) {
     SearchBar(navController, screen = "Home Screen")
     WeatherImage(
@@ -82,6 +90,20 @@ fun HomeScreen(
         .padding(start = 15.dp, end = 15.dp)
         .clip(RoundedCornerShape(15.dp))
     )
+    Text(buildAnnotatedString {
+      pushStyle(SpanStyle(fontWeight = FontWeight.Normal, fontSize = 10.sp))
+
+      append("Recommended Outfit for the weather : ")
+      pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 10.sp))
+      append(outfit)
+
+    }, modifier = Modifier
+      .fillMaxWidth()
+      .padding(top = 15.dp, start = 15.dp),
+      fontFamily = firSansFamily,
+      fontStyle = FontStyle.Normal,
+      fontSize = 10.sp,
+      textAlign = TextAlign.Center)
   }
 
 }
