@@ -52,7 +52,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 val firSansFamily = FontFamily(
-  Font(R.font.poppins_bold, FontWeight.Light),
+  Font(R.font.firasansregular, FontWeight.Light),
   Font(R.font.poppins_bold, FontWeight.Bold)
 )
 
@@ -91,18 +91,17 @@ fun HomeScreen(
         .clip(RoundedCornerShape(15.dp))
     )
     Text(buildAnnotatedString {
-      pushStyle(SpanStyle(fontWeight = FontWeight.Normal, fontSize = 10.sp))
-
+      pushStyle(SpanStyle(fontWeight = FontWeight.Light, fontSize = 10.sp))
       append("Recommended Outfit for the weather : ")
+
       pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 10.sp))
       append(outfit)
 
     }, modifier = Modifier
       .fillMaxWidth()
-      .padding(top = 15.dp, start = 15.dp),
+      .padding(top = 15.dp, end = 15.dp,start = 15.dp),
       fontFamily = firSansFamily,
       fontStyle = FontStyle.Normal,
-      fontSize = 10.sp,
       textAlign = TextAlign.Center)
   }
 
@@ -186,7 +185,7 @@ fun WeatherInformationSection(weatherResponse: WeatherDataItem?, modifier: Modif
   ) {
     Row(
       modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.SpaceAround,
+      horizontalArrangement = Arrangement.SpaceBetween,
     ) {
       DataSection(label = "Time", info = getDate(weatherResponse?.time))
       DataSection(label = "Description", info = weatherResponse?.description)
@@ -211,23 +210,21 @@ fun getDate(dt: Long?): String {
 @Composable
 fun DataSection(label: String, info: String?, modifier: Modifier = Modifier) {
   Column(
-    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+    modifier = modifier.padding(start = 10.dp, end = 10.dp,top = 10.dp, bottom = 10.dp),
     verticalArrangement = Arrangement.SpaceAround
   ) {
     Text(
       text = "$label", modifier = Modifier
-        .padding(start = 10.dp)
         .align(CenterHorizontally),
       fontFamily = firSansFamily,
-      fontSize = 12.sp,
+      fontSize = 10.sp,
       color = colorResource(id = R.color.WeatherInfoColor)
     )
     Text(
       text = "$info", modifier = Modifier
-        .padding(start = 10.dp)
         .align(CenterHorizontally),
       fontFamily = firSansFamily,
-      fontSize = 15.sp,
+      fontSize = 12.sp,
       color = colorResource(id = R.color.DataColor)
     )
   }

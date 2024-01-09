@@ -232,8 +232,7 @@ fun SearchBar(
       Text(
         text = "Search Location",
         modifier = Modifier
-          .fillMaxWidth()
-          .size(30.dp),
+          .fillMaxSize(),
         color = colorResource(id = R.color.SearchHintColor)
       )
     },
