@@ -4,6 +4,9 @@ package com.example.weatherapp.ui
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,7 +52,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 val firSansFamily = FontFamily(
-  Font(R.font.poppins_bold, FontWeight.Light),
+  Font(R.font.firasansregular, FontWeight.Light),
   Font(R.font.poppins_bold, FontWeight.Bold)
 )
 
@@ -54,11 +60,13 @@ val firSansFamily = FontFamily(
 @Composable
 fun HomeScreen(
   navController: NavController,
-  searchViewmodel: SearchViewModel,
+  searchViewModel: SearchViewModel,
 ) {
-  val weatherResponse by searchViewmodel.weatherResponse.collectAsState()
+  val weatherResponse by searchViewModel.weatherResponse.collectAsState()
+  val outfit by searchViewModel.recommendedOutfit.collectAsState()
   Column(
-    horizontalAlignment = CenterHorizontally
+    horizontalAlignment = CenterHorizontally,
+    modifier = Modifier.verticalScroll(rememberScrollState())
   ) {
     SearchBar(navController, screen = "Home Screen")
     WeatherImage(
@@ -82,6 +90,19 @@ fun HomeScreen(
         .padding(start = 15.dp, end = 15.dp)
         .clip(RoundedCornerShape(15.dp))
     )
+    Text(buildAnnotatedString {
+      pushStyle(SpanStyle(fontWeight = FontWeight.Light, fontSize = 10.sp))
+      append("Recommended Outfit for the weather : ")
+
+      pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 10.sp))
+      append(outfit)
+
+    }, modifier = Modifier
+      .fillMaxWidth()
+      .padding(top = 15.dp, end = 15.dp,start = 15.dp),
+      fontFamily = firSansFamily,
+      fontStyle = FontStyle.Normal,
+      textAlign = TextAlign.Center)
   }
 
 }
@@ -164,7 +185,7 @@ fun WeatherInformationSection(weatherResponse: WeatherDataItem?, modifier: Modif
   ) {
     Row(
       modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.SpaceAround,
+      horizontalArrangement = Arrangement.SpaceBetween,
     ) {
       DataSection(label = "Time", info = getDate(weatherResponse?.time))
       DataSection(label = "Description", info = weatherResponse?.description)
@@ -189,23 +210,21 @@ fun getDate(dt: Long?): String {
 @Composable
 fun DataSection(label: String, info: String?, modifier: Modifier = Modifier) {
   Column(
-    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+    modifier = modifier.padding(start = 10.dp, end = 10.dp,top = 10.dp, bottom = 10.dp),
     verticalArrangement = Arrangement.SpaceAround
   ) {
     Text(
       text = "$label", modifier = Modifier
-        .padding(start = 10.dp)
         .align(CenterHorizontally),
       fontFamily = firSansFamily,
-      fontSize = 12.sp,
+      fontSize = 10.sp,
       color = colorResource(id = R.color.WeatherInfoColor)
     )
     Text(
       text = "$info", modifier = Modifier
-        .padding(start = 10.dp)
         .align(CenterHorizontally),
       fontFamily = firSansFamily,
-      fontSize = 15.sp,
+      fontSize = 12.sp,
       color = colorResource(id = R.color.DataColor)
     )
   }

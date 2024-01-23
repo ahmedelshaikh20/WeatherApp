@@ -1,10 +1,12 @@
 package com.example.weatherapp.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.weatherapp.api.WeatherRepositry
 import com.example.weatherapp.locationservices.LocationService
 import com.example.weatherapp.model.WeatherDataItem
+import com.google.ai.client.generativeai.GenerativeModel
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
   private val weatherRepository: WeatherRepositry,
-  private val locationService: LocationService
+  private val locationService: LocationService,
+  private val geminiAi: GenerativeModel
 ) : ViewModel() {
 
 
@@ -35,6 +38,13 @@ class SearchViewModel @Inject constructor(
   private var _apiRequestDone = MutableStateFlow<Boolean>(false)
   val apiRequestDone = _apiRequestDone.asStateFlow()
 
+  private var _recommendedOutfit = MutableStateFlow<String>("")
+  val recommendedOutfit = _recommendedOutfit.asStateFlow()
+
+
+  init {
+
+  }
 
   suspend fun OnLocationGranted() {
     viewModelScope.launch {
@@ -44,6 +54,16 @@ class SearchViewModel @Inject constructor(
 
   }
 
+  fun recommendOutfitAi(weather: Double?) {
+    val prompt =
+      "Recommend outfit for that weather $weather in Celsius? , i need answer in four words"
+    viewModelScope.launch {
+      if (weather != null) {
+        val response = geminiAi.generateContent(prompt)
+        _recommendedOutfit.value = response.text.toString()
+      }
+    }
+  }
 
   fun LocationIsGranted() {
     _isPermissionGranted.update { true }
@@ -55,21 +75,13 @@ class SearchViewModel @Inject constructor(
 
   suspend fun getWeatherData(latLng: LatLng) {
     _weatherResponse.update {
-      weatherRepository.getWeatherByLocation(latLng.latitude, latLng.longitude)!!
-    }
+      weatherRepository.getWeatherByLocation(latLng.latitude, latLng.longitude)
 
+    }
+    recommendOutfitAi(weatherResponse.value?.temperature)
     _apiRequestDone.update { true }
   }
 
-
-  fun getDate(dt: Long): String {
-    val date = Date((dt) * 1000)
-    val sdf = SimpleDateFormat("yyyy-MM-dd,HH:mm")
-    val formattedDate = sdf.format(date)
-    val time = formattedDate.split(',').get(1)
-    return time;
-
-  }
 
   fun citySelected(selectedCity: WeatherDataItem) {
     _weatherResponse.update { selectedCity }

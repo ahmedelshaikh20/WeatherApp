@@ -2,6 +2,7 @@
 
 androidGradlePlugin = "8.1.2"
 androidKotlinPlugin = "1.8.0"
+generativeai = "0.1.1"
 hiltPlugin = "2.44"
 navigationSafeAragsPlugin = "2.5.0"
 gmsGoogleServicePlugin = "4.3.15"
@@ -45,6 +46,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converter-gson" }
 filament-android = { module = "com.google.ar.sceneform:filament-android", version.ref = "filament-android" }
+generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
