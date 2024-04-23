@@ -21,11 +21,10 @@ Android App fetches weather information of specific locations and displays it on
 
 ## Screenshots
 
-|                  Main Screen                      |                   Search Screen                    |               
+|                  Splash Screen                    |                Permission Request                  |                     
 |:-------------------------------------------------:|:--------------------------------------------------:|
-|        ![main](images/MainScreen.png)             |            ![search](images/SearchScreen.png)      |         
-|                Permission Request                 |                       Splash Screen                | 
-|![Permission Request](images/PermissionRequest.png)|          ![Splash Screen](images/SplashScreen.png) |      
-                 
+| ![Splash Screen](images/SplashScreen.png)         | ![Permission Request](images/PermissionRequest.png)|
+|                  Main Screen                      |                   Search Screen                    |
+|        ![main](images/MainScreen.png)             |            ![search](images/SearchScreen.png)      |                  
    
 
