@@ -15,6 +15,7 @@ Android App fetches weather information of specific locations and displays it on
 - <b>Hilt:</b> Used hilt for Dependency Injection
 - <b>Retrofit:</b> Used fetch info from server.
 - <b>OpenWeather Api:</b> Our Weather Api to get info about weather based on search.
+- <b>Gemini Api:</b> To recommend outfit based on the current weather.
 
 
 
